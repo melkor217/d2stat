@@ -1,7 +1,8 @@
 require 'net/http'
 
 class GetMatchesJob < ActiveJob::Base
-  queue_as :default
+  include Sidekiq::Worker
+  queue_as :low_priority
 
 
   def get_url(start_at_match_id=nil)
@@ -12,7 +13,7 @@ class GetMatchesJob < ActiveJob::Base
       start_arg = "start_at_match_id=#{start_at_match_id}&"
     end
     url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?'+start_arg+key_arg
-    logger.error url
+    logger.info url
     return url
   end
 
@@ -37,6 +38,9 @@ class GetMatchesJob < ActiveJob::Base
             record.from_json(match.to_json)
             logger.info('saved %s' % match['match_id'])
             record.save
+          else
+            logger.info('skip  %s' % match['match_id'])
+
           end
         end
       end
@@ -49,6 +53,5 @@ class GetMatchesJob < ActiveJob::Base
   def perform(*args)
     # Do something later
     get_json
-    logger.error @qwe
   end
 end

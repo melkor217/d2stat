@@ -47,3 +47,5 @@ end
 
 gem 'mongoid'
 gem 'slim-rails'
+gem 'sidekiq'
+gem 'sidekiq-limit_fetch'
