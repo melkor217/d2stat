@@ -1,4 +1,6 @@
 Rails.application.routes.draw do
+  resources :accounts
+  resources :latest_matches
   resources :players
   resources :matches
   # The priority is based upon order of creation: first created -> highest priority.
