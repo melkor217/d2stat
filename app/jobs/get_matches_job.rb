@@ -40,7 +40,6 @@ class GetMatchesJob < ActiveJob::Base
             record.save
           else
             logger.info('skip  %s' % match['match_id'])
-
           end
         end
       end

@@ -4,8 +4,6 @@ class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
   def index
-    GetMatchesJob.perform_later
-    @matches = Match.all
   end
 
   # GET /matches/1
