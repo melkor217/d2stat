@@ -16,11 +16,25 @@ class SteamAPI
     return url
   end
 
-  def self.get_account_url(accont_id)
+  def self.get_history(start_at_match_id=nil)
+    url = self.get_history_url(start_at_match_id)
+    resp = Net::HTTP.get_response(URI.parse(url))
+    data = JSON.parse(resp.body)
+    return data
+  end
+
+  def self.get_account_url(account_id)
     key = self.get_key
-    account_id64 = str(account_id + 76561197960265728)
+    account_id64 = (account_id.to_i + 76561197960265728).to_i
     key_arg = "key=#{key}&"
-    id_arg = "steamids=#{account_id}&"
+    id_arg = "steamids=#{account_id64}&"
     url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?'+id_arg+key_arg
+  end
+
+  def self.get_account(account_id)
+    url = self.get_account_url(account_id)
+    resp = Net::HTTP.get_response(URI.parse(url))
+    data = JSON.parse(resp.body)
+    return data
   end
 end

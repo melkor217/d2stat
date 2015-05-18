@@ -26,7 +26,27 @@ class GetMatchesJob < ActiveJob::Base
     end
   end
 
+  def add_account(account_id)
+    data = SteamAPI.get_account(account_id)
+    if data['response']['players']
+      player = data['response']['players'].first
+      if player
+        query = Account.where(account_id: account_id)
+        if not query.exists?
+          record = Account.new
+          record.from_json(player.to_json)
+          record.last_check = Time.now
+          record.save
+          return player['personaname']
+        else
+          logger.error query.find()
+        end
+      end
+    end
+  end
+
   def add_player(player, match)
+    add_account(player['account_id'])
     record = Player.new
     record.from_json (player.to_json)
     match.players.push record
@@ -34,13 +54,9 @@ class GetMatchesJob < ActiveJob::Base
     match.save
   end
 
-  def add_account(account_id)
-
-  end
 
   def get_json(start_at_match_id=nil)
-    resp = Net::HTTP.get_response(URI.parse(SteamAPI.get_history_url(start_at_match_id)))
-    data = JSON.parse(resp.body)
+    data = SteamAPI.get_history(start_at_match_id)
     if not data.empty? and data['result']['num_results'] > 0
       logger.info "start from #{start_at_match_id}"
       data['result']['matches'].each do |match|

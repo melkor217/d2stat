@@ -1,7 +1,7 @@
 class Account
   include Mongoid::Document
-  field :account_id, type: BigDecimal
-  field :steamid, type: BigDecimal
+  field :account_id, type: BigDecimal # 32bit
+  field :steamid, type: BigDecimal    # 64bit
   field :profilestate, type: Integer
   field :personaname, type: String
   field :lastlogoff, type: Integer
@@ -17,5 +17,9 @@ class Account
   field :gameid, type: Integer
   field :loccountrycode, type: String
   field :locstatecode, type: Integer
+  field :communityvisibilitystate, type: Integer
+  field :commentpermission, type: Integer
+  field :realname, type: String
+  field :loccityid, type: Integer
   field :last_check, type: DateTime
 end
