@@ -34,6 +34,10 @@ class GetMatchesJob < ActiveJob::Base
     match.save
   end
 
+  def add_account(account_id)
+
+  end
+
   def get_json(start_at_match_id=nil)
     resp = Net::HTTP.get_response(URI.parse(SteamAPI.get_history_url(start_at_match_id)))
     data = JSON.parse(resp.body)
