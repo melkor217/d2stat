@@ -31,8 +31,9 @@ class SteamAPI
     url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?'+id_arg+key_arg
   end
 
-  def self.get_account(account_id)
-    url = self.get_account_url(account_id)
+  def self.get_account(account_ids)
+    string = account_ids.join(',')
+    url = self.get_account_url(string)
     resp = Net::HTTP.get_response(URI.parse(url))
     data = JSON.parse(resp.body)
     return data

@@ -14,9 +14,10 @@ class GetMatchesJob < ActiveJob::Base
     logger.debug count
     if Match.where(match_id: match['match_id']).count == 0
       record = Match.new
-      match['players'].each do |player|
-        add_player(player, record)
-      end
+#      match['players'].each do |player|
+#        add_player(player, record)
+#      end
+      add_players(match['players'], record)
       match.delete('players')
       record.from_json(match.to_json)
       logger.info('saved %s' % match['match_id'])
@@ -42,6 +43,35 @@ class GetMatchesJob < ActiveJob::Base
           logger.error query.find()
         end
       end
+    end
+  end
+
+  def add_players(players, match)
+    # array of 32bit account_ids
+    account_ids = players.map do |player|
+      player['account_id']
+    end
+    # database records for each player
+    records = players.map do |player|
+      record = Player.new
+      record.from_json(player.to_json)
+    end
+    accounts_data = SteamAPI.get_account(account_ids)
+    if accounts_data['response']['players']
+      accounts = accounts_data['response']['players']
+    end
+    accounts.each do |account|
+      # players that matches account
+      matched_players = players.select do |player|
+        player['account_id'] == account['account_id']
+      end
+      matched_players.each do |player|
+        player['personaname'] = account['personaname']
+      end
+      # TODO: save accounts and add nickname to players
+    end
+    records.each do |record|
+      record.save
     end
   end
 

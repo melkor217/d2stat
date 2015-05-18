@@ -4,5 +4,6 @@ class Player
   field :account_id, type: BigDecimal
   field :player_slot, type: Integer
   field :hero_id, type: Integer
+  field :personaname, type: String
   belongs_to :match
 end
