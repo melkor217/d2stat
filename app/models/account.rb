@@ -23,4 +23,6 @@ class Account
   field :loccityid, type: Integer
   field :last_check, type: DateTime
   has_many :players
+
+  index({ account_id: 1 }, { unique: true})
 end

@@ -13,12 +13,9 @@ class GetMatchesJob < ActiveJob::Base
     logger.debug count
     if Match.where(match_id: match['match_id']).count == 0
       record = Match.new
-#      match['players'].each do |player|
-#        add_player(player, record)
-#      end
       add_players(match['players'], record)
       match.delete('players')
-      record.from_json(match.to_json)
+      record.update(match)
       logger.info('saved %s' % match['match_id'])
       record.save
     else
@@ -31,15 +28,14 @@ class GetMatchesJob < ActiveJob::Base
       account['account_id'] == account_id
     end
     if account = matched.first
-      criteria = Account.where(account_id: account_id).count
-      if criteria
-        record = Account.find_by(account_id: account_id)
-        record.from_json(account.to_json)
+      criteria = Account.where(account_id: account_id)
+      if criteria.exists?
+        record = criteria.first
       else
         record = Account.new
-        record.insert.from_json(account.to_json)
       end
 
+      record.update(account)
       record.last_check = Time.now
       record.players.push player
       record.save
@@ -61,7 +57,7 @@ class GetMatchesJob < ActiveJob::Base
     accounts.each do |account|
       # players that matches account
       matched_players = players.select do |player|
-        player['account_id'] == account['account_id']
+        player['account_id'] == account['account_id'].to_i
       end
       matched_players.each do |player|
         player['personaname'] = account['personaname']
@@ -70,22 +66,12 @@ class GetMatchesJob < ActiveJob::Base
     end
     records = players.map do |player|
       record = Player.new
-      record.from_json(player.to_json)
+      record.update(player)
       match.players.push record
       add_account(accounts, player['account_id'], record)
       record.save
     end
   end
-
-  def add_player(player, match)
-    #add_account(player['account_id'])
-    record = Player.new
-    record.from_json (player.to_json)
-    match.players.push record
-    record.save
-    match.save
-  end
-
 
   def get_json(start_at_match_id=nil)
     data = SteamAPI.get_history(start_at_match_id)
