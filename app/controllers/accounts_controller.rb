@@ -69,6 +69,6 @@ class AccountsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def account_params
-      params.require(:account).permit(:account_id, :last_check)
+      params.require(:account).permit(:account_id, :steamid, :profilestate, :personaname, :lastlogoff, :profileurl, :avatar, :avatarmedium, :avatarfull, :personastate, :primaryclanid, :timecreated, :personastateflags, :gameextrainfo, :gameid, :loccountrycode, :locstatecode, :last_check)
     end
 end

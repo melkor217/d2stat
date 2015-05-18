@@ -2,12 +2,11 @@ require 'net/http'
 
 class GetMatchesJob < ActiveJob::Base
   include Sidekiq::Worker
-  queue_as :low_priority
+  queue_as :scan_new_games
 
 
   def get_history_url(start_at_match_id=nil)
-    key='579DD7729A7A4A6AE9DC5CA730B9644E'
-    key_arg = "key=#{key}&"
+    key_arg = "key=#{@key}&"
     start_arg = ''
     if start_at_match_id
       start_arg = "start_at_match_id=#{start_at_match_id}&"
@@ -15,6 +14,13 @@ class GetMatchesJob < ActiveJob::Base
     url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?'+start_arg+key_arg
     logger.info url
     return url
+  end
+
+  def get_account_url(accont_id)
+    account_id64 = str(account_id + 76561197960265728)
+    key_arg = "key=#{@key}&"
+    id_arg = "steamids=#{account_id}&"
+    url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?'+id_arg+key_arg
   end
 
   def add_match(match)
@@ -60,6 +66,7 @@ class GetMatchesJob < ActiveJob::Base
   end
 
   def perform(*args)
+    @key = '579DD7729A7A4A6AE9DC5CA730B9644E'
     # Do something later
     get_json
   end

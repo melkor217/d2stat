@@ -4,6 +4,22 @@ table
   thead
     tr
       th Account
+      th Steamid
+      th Profilestate
+      th Personaname
+      th Lastlogoff
+      th Profileurl
+      th Avatar
+      th Avatarmedium
+      th Avatarfull
+      th Personastate
+      th Primaryclanid
+      th Timecreated
+      th Personastateflags
+      th Gameextrainfo
+      th Gameid
+      th Loccountrycode
+      th Locstatecode
       th Last check
       th
       th
@@ -13,6 +29,22 @@ table
     - @accounts.each do |account|
       tr
         td = account.account_id
+        td = account.steamid
+        td = account.profilestate
+        td = account.personaname
+        td = account.lastlogoff
+        td = account.profileurl
+        td = account.avatar
+        td = account.avatarmedium
+        td = account.avatarfull
+        td = account.personastate
+        td = account.primaryclanid
+        td = account.timecreated
+        td = account.personastateflags
+        td = account.gameextrainfo
+        td = account.gameid
+        td = account.loccountrycode
+        td = account.locstatecode
         td = account.last_check
         td = link_to 'Show', account
         td = link_to 'Edit', edit_account_path(account)
