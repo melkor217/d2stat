@@ -5,7 +5,6 @@ class GetMatchesJob < ActiveJob::Base
   queue_as :scan_new_games
 
 
-
   def add_match(match)
     count = Match.where(match_id: match['match_id']).count
     if count > 1
@@ -52,10 +51,7 @@ class GetMatchesJob < ActiveJob::Base
       player['account_id']
     end
     # database records for each player
-    records = players.map do |player|
-      record = Player.new
-      record.from_json(player.to_json)
-    end
+
     accounts_data = SteamAPI.get_account(account_ids)
     if accounts_data['response']['players']
       accounts = accounts_data['response']['players']
@@ -67,10 +63,13 @@ class GetMatchesJob < ActiveJob::Base
       end
       matched_players.each do |player|
         player['personaname'] = account['personaname']
+        logger.error "YAY found #{player}"
       end
       # TODO: save accounts and add nickname to players
     end
-    records.each do |record|
+    records = players.map do |player|
+      record = Player.new
+      record.from_json(player.to_json)
       record.save
     end
   end

@@ -23,19 +23,28 @@ class SteamAPI
     return data
   end
 
-  def self.get_account_url(account_id)
+  def self.get_account_url(account_ids)
     key = self.get_key
-    account_id64 = (account_id.to_i + 76561197960265728).to_i
     key_arg = "key=#{key}&"
-    id_arg = "steamids=#{account_id64}&"
+    id_arg = "steamids=#{account_ids}&"
     url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?'+id_arg+key_arg
+    Rails.logger.error url
+    return url
   end
 
   def self.get_account(account_ids)
+    account_ids.map! do |id|
+      id.to_i + 76561197960265728
+    end
     string = account_ids.join(',')
     url = self.get_account_url(string)
     resp = Net::HTTP.get_response(URI.parse(url))
     data = JSON.parse(resp.body)
+    if data['response']['players']
+      data['response']['players'].each do |player|
+        player['account_id'] = player['steamid'].to_i - 76561197960265728
+      end
+    end
     return data
   end
 end
