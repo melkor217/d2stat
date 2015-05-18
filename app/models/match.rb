@@ -6,6 +6,7 @@ class Match
   field :lobby_type, type: Integer
   field :radiant_team_id, type: Integer
   field :dire_team_id, type: Integer
-  belongs_to :latest_match
   has_many :players
+
+  index({ match_id: 1 }, { unique: true})
 end

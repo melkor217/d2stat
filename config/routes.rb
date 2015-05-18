@@ -3,7 +3,6 @@ require 'sidekiq/web'
 Rails.application.routes.draw do
   resources :keys
   resources :accounts
-  resources :latest_matches
   resources :players
   resources :matches
   mount Sidekiq::Web => '/sidekiq'

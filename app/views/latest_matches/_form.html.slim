@@ -1,9 +1,0 @@
-= form_for @latest_match do |f|
-  - if @latest_match.errors.any?
-    #error_explanation
-      h2 = "#{pluralize(@latest_match.errors.count, "error")} prohibited this latest_match from being saved:"
-      ul
-        - @latest_match.errors.full_messages.each do |message|
-          li = message
-
-  .actions = f.submit
