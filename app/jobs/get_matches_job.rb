@@ -5,23 +5,6 @@ class GetMatchesJob < ActiveJob::Base
   queue_as :scan_new_games
 
 
-  def get_history_url(start_at_match_id=nil)
-    key_arg = "key=#{@key}&"
-    start_arg = ''
-    if start_at_match_id
-      start_arg = "start_at_match_id=#{start_at_match_id}&"
-    end
-    url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?'+start_arg+key_arg
-    logger.info url
-    return url
-  end
-
-  def get_account_url(accont_id)
-    account_id64 = str(account_id + 76561197960265728)
-    key_arg = "key=#{@key}&"
-    id_arg = "steamids=#{account_id}&"
-    url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?'+id_arg+key_arg
-  end
 
   def add_match(match)
     count = Match.where(match_id: match['match_id']).count
@@ -52,7 +35,7 @@ class GetMatchesJob < ActiveJob::Base
   end
 
   def get_json(start_at_match_id=nil)
-    resp = Net::HTTP.get_response(URI.parse(get_history_url(start_at_match_id)))
+    resp = Net::HTTP.get_response(URI.parse(SteamAPI.get_history_url(start_at_match_id)))
     data = JSON.parse(resp.body)
     if not data.empty? and data['result']['num_results'] > 0
       logger.info "start from #{start_at_match_id}"
@@ -66,7 +49,6 @@ class GetMatchesJob < ActiveJob::Base
   end
 
   def perform(*args)
-    @key = '579DD7729A7A4A6AE9DC5CA730B9644E'
     # Do something later
     get_json
   end
