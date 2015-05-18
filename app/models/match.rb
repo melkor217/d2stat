@@ -7,4 +7,5 @@ class Match
   field :radiant_team_id, type: Integer
   field :dire_team_id, type: Integer
   belongs_to :latest_match
+  has_many :players
 end
