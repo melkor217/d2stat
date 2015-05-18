@@ -22,4 +22,5 @@ class Account
   field :realname, type: String
   field :loccityid, type: Integer
   field :last_check, type: DateTime
+  has_many :players
 end

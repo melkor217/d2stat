@@ -6,4 +6,5 @@ class Player
   field :hero_id, type: Integer
   field :personaname, type: String
   belongs_to :match
+  belongs_to :account
 end

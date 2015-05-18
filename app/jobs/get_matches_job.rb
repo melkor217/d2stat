@@ -26,22 +26,23 @@ class GetMatchesJob < ActiveJob::Base
     end
   end
 
-  def add_account(account_id)
-    data = SteamAPI.get_account(account_id)
-    if data['response']['players']
-      player = data['response']['players'].first
-      if player
-        query = Account.where(account_id: account_id)
-        if not query.exists?
-          record = Account.new
-          record.from_json(player.to_json)
-          record.last_check = Time.now
-          record.save
-          return player['personaname']
-        else
-          logger.error query.find()
-        end
+  def add_account(accounts, account_id, player)
+    matched = accounts.select do |account|
+      account['account_id'] == account_id
+    end
+    if account = matched.first
+      criteria = Account.where(account_id: account_id).count
+      if criteria
+        record = Account.find_by(account_id: account_id)
+        record.from_json(account.to_json)
+      else
+        record = Account.new
+        record.insert.from_json(account.to_json)
       end
+
+      record.last_check = Time.now
+      record.players.push player
+      record.save
     end
   end
 
@@ -56,6 +57,7 @@ class GetMatchesJob < ActiveJob::Base
     if accounts_data['response']['players']
       accounts = accounts_data['response']['players']
     end
+    logger.info "#{accounts.size} accounts"
     accounts.each do |account|
       # players that matches account
       matched_players = players.select do |player|
@@ -63,19 +65,20 @@ class GetMatchesJob < ActiveJob::Base
       end
       matched_players.each do |player|
         player['personaname'] = account['personaname']
-        logger.error "YAY found #{player}"
       end
       # TODO: save accounts and add nickname to players
     end
     records = players.map do |player|
       record = Player.new
       record.from_json(player.to_json)
+      match.players.push record
+      add_account(accounts, player['account_id'], record)
       record.save
     end
   end
 
   def add_player(player, match)
-    add_account(player['account_id'])
+    #add_account(player['account_id'])
     record = Player.new
     record.from_json (player.to_json)
     match.players.push record

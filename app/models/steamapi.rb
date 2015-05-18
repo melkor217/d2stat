@@ -12,7 +12,6 @@ class SteamAPI
       start_arg = "start_at_match_id=#{start_at_match_id}&"
     end
     url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?'+start_arg+key_arg
-    Rails.logger.info url
     return url
   end
 
@@ -28,7 +27,6 @@ class SteamAPI
     key_arg = "key=#{key}&"
     id_arg = "steamids=#{account_ids}&"
     url = 'https://api.steampowered.com/ISteamUser/GetPlayerSummaries/v0002/?'+id_arg+key_arg
-    Rails.logger.error url
     return url
   end
 
