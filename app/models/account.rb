@@ -21,7 +21,10 @@ class Account
   field :commentpermission, type: Integer
   field :realname, type: String
   field :loccityid, type: Integer
+  field :lobbysteamid, type: Integer
   field :last_check, type: DateTime
+  field :gameserverip, type: String
+  field :gameserversteamid, type: Integer
   has_many :players
 
   index({ account_id: 1 }, { unique: true})
