@@ -1,0 +1,15 @@
+p#notice = notice
+
+p
+  strong Ability:
+  = @ability_upgrade.ability
+p
+  strong Time:
+  = @ability_upgrade.time
+p
+  strong Level:
+  = @ability_upgrade.level
+
+= link_to 'Edit', edit_ability_upgrade_path(@ability_upgrade)
+'|
+= link_to 'Back', ability_upgrades_path

@@ -1,0 +1,25 @@
+h1 Listing ability_upgrades
+
+table
+  thead
+    tr
+      th Ability
+      th Time
+      th Level
+      th
+      th
+      th
+
+  tbody
+    - @ability_upgrades.each do |ability_upgrade|
+      tr
+        td = ability_upgrade.ability
+        td = ability_upgrade.time
+        td = ability_upgrade.level
+        td = link_to 'Show', ability_upgrade
+        td = link_to 'Edit', edit_ability_upgrade_path(ability_upgrade)
+        td = link_to 'Destroy', ability_upgrade, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Ability upgrade', new_ability_upgrade_path
