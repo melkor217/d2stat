@@ -7,4 +7,6 @@ class AdditionalUnit
   field :item_3, type: Integer
   field :item_4, type: Integer
   field :item_5, type: Integer
+
+  belongs_to :player
 end

@@ -28,4 +28,24 @@ class Account
   has_many :players
 
   index({ account_id: 1 }, { unique: true})
+
+  def self.add_account(accounts, account_id, player)
+    matched = accounts.select do |account|
+      account['account_id'] == account_id
+    end
+    if account = matched.first
+      criteria = Account.where(account_id: account_id)
+      if criteria.exists?
+        record = criteria.first
+      else
+        record = Account.new
+      end
+
+      record.update(account)
+      record.last_check = Time.now
+      record.players.push player
+      record.save
+    end
+  end
+
 end

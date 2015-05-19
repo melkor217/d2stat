@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong Is pick:
+  = @picks_ban.is_pick
+p
+  strong Hero:
+  = @picks_ban.hero_id
+p
+  strong Team:
+  = @picks_ban.team
+p
+  strong Order:
+  = @picks_ban.order
+
+= link_to 'Edit', edit_picks_ban_path(@picks_ban)
+'|
+= link_to 'Back', picks_bans_path

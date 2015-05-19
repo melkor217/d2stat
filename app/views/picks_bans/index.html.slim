@@ -1,0 +1,27 @@
+h1 Listing picks_bans
+
+table
+  thead
+    tr
+      th Is pick
+      th Hero
+      th Team
+      th Order
+      th
+      th
+      th
+
+  tbody
+    - @picks_bans.each do |picks_ban|
+      tr
+        td = picks_ban.is_pick
+        td = picks_ban.hero_id
+        td = picks_ban.team
+        td = picks_ban.order
+        td = link_to 'Show', picks_ban
+        td = link_to 'Edit', edit_picks_ban_path(picks_ban)
+        td = link_to 'Destroy', picks_ban, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Picks ban', new_picks_ban_path

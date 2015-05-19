@@ -1,0 +1,21 @@
+= form_for @picks_ban do |f|
+  - if @picks_ban.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@picks_ban.errors.count, "error")} prohibited this picks_ban from being saved:"
+      ul
+        - @picks_ban.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :is_pick
+    = f.check_box :is_pick
+  .field
+    = f.label :hero_id
+    = f.number_field :hero_id
+  .field
+    = f.label :team
+    = f.number_field :team
+  .field
+    = f.label :order
+    = f.number_field :order
+  .actions = f.submit
