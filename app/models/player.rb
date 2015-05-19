@@ -23,6 +23,7 @@ class Player
   field :hero_damage, type: Integer
   field :tower_damage, type: Integer
   field :hero_healing, type: Integer
+  field :gold_spent, type: Integer
   field :level, type: Integer
 
   has_many :ability_upgrades

@@ -1,0 +1,27 @@
+p#notice = notice
+
+p
+  strong Unitname:
+  = @additional_unit.unitname
+p
+  strong Item 0:
+  = @additional_unit.item_0
+p
+  strong Item 1:
+  = @additional_unit.item_1
+p
+  strong Item 2:
+  = @additional_unit.item_2
+p
+  strong Item 3:
+  = @additional_unit.item_3
+p
+  strong Item 4:
+  = @additional_unit.item_4
+p
+  strong Item 5:
+  = @additional_unit.item_5
+
+= link_to 'Edit', edit_additional_unit_path(@additional_unit)
+'|
+= link_to 'Back', additional_units_path

@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :additional_units
   resources :ability_upgrades
   resources :keys
   resources :accounts

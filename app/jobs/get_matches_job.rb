@@ -12,10 +12,14 @@ class GetMatchesJob < ActiveJob::Base
     end
     logger.debug count
     if Match.where(match_id: match['match_id']).count == 0
+      details = SteamAPI::get_match(match['match_id'])
+      if details and details['result']
+        match = details['result']
+        match['verbose'] = true
+      end
       record = Match.new
       add_players(match['players'], record)
-      match.delete('players')
-      record.update(match)
+      record.update(match.select { |key| key != 'players' })
       logger.info('saved %s' % match['match_id'])
       record.save
     else
@@ -62,11 +66,15 @@ class GetMatchesJob < ActiveJob::Base
       matched_players.each do |player|
         player['personaname'] = account['personaname']
       end
-      # TODO: save accounts and add nickname to players
     end
     records = players.map do |player|
       record = Player.new
-      record.update(player)
+      player['ability_upgrades'].each do |abi_upgrade|
+        abirecord = AbilityUpgrade.new(abi_upgrade)
+        record.ability_upgrades.push abirecord
+        abirecord.save
+      end if player['ability_upgrades']
+      record.update(player.select { |key| key != 'ability_upgrades' and key != 'additional_units' })
       match.players.push record
       add_account(accounts, player['account_id'], record)
       record.save
@@ -89,5 +97,7 @@ class GetMatchesJob < ActiveJob::Base
   def perform(*args)
     # Do something later
     get_json
+    sleep(5)
+    GetMatchesJob.perform_later
   end
 end

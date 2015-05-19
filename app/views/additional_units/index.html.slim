@@ -1,0 +1,33 @@
+h1 Listing additional_units
+
+table
+  thead
+    tr
+      th Unitname
+      th Item 0
+      th Item 1
+      th Item 2
+      th Item 3
+      th Item 4
+      th Item 5
+      th
+      th
+      th
+
+  tbody
+    - @additional_units.each do |additional_unit|
+      tr
+        td = additional_unit.unitname
+        td = additional_unit.item_0
+        td = additional_unit.item_1
+        td = additional_unit.item_2
+        td = additional_unit.item_3
+        td = additional_unit.item_4
+        td = additional_unit.item_5
+        td = link_to 'Show', additional_unit
+        td = link_to 'Edit', edit_additional_unit_path(additional_unit)
+        td = link_to 'Destroy', additional_unit, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Additional unit', new_additional_unit_path

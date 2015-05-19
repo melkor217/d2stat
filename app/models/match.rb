@@ -20,6 +20,7 @@ class Match
   field :positive_votes, type: Integer
   field :negative_votes, type: Integer
   field :game_mode, type: Integer
+  field :verbose, type: Boolean # have ve got verbose stats
   has_many :players
 
   index({ match_id: 1 }, { unique: true})

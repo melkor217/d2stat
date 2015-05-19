@@ -45,4 +45,18 @@ class SteamAPI
     end
     return data
   end
+
+  def self.get_match_url(match_id)
+    key = self.get_key
+    key_arg = "key=#{key}&"
+    id_arg = "match_id=#{match_id}&"
+    url = "https://api.steampowered.com/IDOTA2Match_570/GetMatchDetails/V001/?"+id_arg+key_arg
+  end
+
+  def self.get_match(match_id)
+    url = self.get_match_url(match_id)
+    resp = Net::HTTP.get_response(URI.parse(url))
+    data = JSON.parse(resp.body)
+    return data
+  end
 end

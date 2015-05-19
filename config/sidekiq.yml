@@ -1,4 +1,4 @@
-:timeout: 600
+:timeout: 5
 
 :queues:
   - scan_new_games
