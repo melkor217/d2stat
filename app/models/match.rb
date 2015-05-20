@@ -22,9 +22,22 @@ class Match
   field :game_mode, type: Integer
   field :radiant_captain, type: Integer
   field :dire_captain, type: Integer
-  field :verbose, type: Boolean # have ve got verbose stats
+  field :radiant_name, type: String
+  field :dire_name, type: String
+  field :radiant_logo, type: String
+  field :dire_logo, type: String
+  field :radiant_team_complete, type: Integer
+  field :dire_team_complete, type: Integer
+  field :radiant_guild_id, type: Integer
+  field :dire_guild_id, type: Integer
+  field :radiant_guild_name, type: String
+  field :dire_guild_name, type: String
+  field :radiant_guild_logo, type: String
+  field :dire_guild_logo, type: String
+  field :rev, type: Integer # internal
   has_many :picks_bans
   has_many :players
+  has_many :scanner_statuses
 
   index({ match_id: 1 }, { unique: true})
 
@@ -38,11 +51,11 @@ class Match
       details = SteamAPI::get_match(match['match_id'])
       if details and details['result']
         match = details['result']
-        match['verbose'] = true
+        match['rev'] = 1
       end
       record = Match.new
       Player.add_players(match['players'], record)
-      record.update(match.select { |key| key != 'players' })
+      record.update(match.select { |key| key != 'players' and key != 'picks_bans' })
       match['picks_bans'].each do |picks_ban|
         pickrecord = PicksBan.new(picks_ban)
         record.picks_bans.push pickrecord

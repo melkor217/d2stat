@@ -2,5 +2,7 @@
 
 :queues:
   - scan_new_games
+  - full_scan
 :limits:
   scan_new_games: 1
+  full_scan: 1

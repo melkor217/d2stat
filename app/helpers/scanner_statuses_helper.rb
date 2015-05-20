@@ -1,0 +1,2 @@
+module ScannerStatusesHelper
+end

@@ -8,7 +8,10 @@ s = Rufus::Scheduler.singleton
 
 # Awesome recurrent task...
 #
-#s.every '6m' do
-Rails.logger.info "#{Time.now} running rufus"
 GetMatchesJob.perform_later
-#end
+FullScanJob.perform_later
+Rails.logger.info "#{Time.now} running rufus"
+s.every '12m' do
+  FullScanJob.perform_later
+  GetMatchesJob.perform_later
+end

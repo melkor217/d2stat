@@ -1,0 +1,9 @@
+p#notice = notice
+
+p
+  strong Match seq num:
+  = @scanner_status.match_seq_num
+
+= link_to 'Edit', edit_scanner_status_path(@scanner_status)
+'|
+= link_to 'Back', scanner_statuses_path

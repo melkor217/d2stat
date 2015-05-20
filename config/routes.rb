@@ -1,6 +1,7 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
+  resources :scanner_statuses
   resources :picks_bans
   resources :additional_units
   resources :ability_upgrades

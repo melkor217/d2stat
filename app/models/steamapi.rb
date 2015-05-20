@@ -22,6 +22,26 @@ class SteamAPI
     return data
   end
 
+  def self.get_matches_url(start_at_match_seq=nil)
+    key = self.get_key()
+    key_arg = "key=#{key}&"
+    start_arg = ''
+    if start_at_match_seq
+      start_arg = "start_at_match_seq_num=#{start_at_match_seq}&"
+    end
+    url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchHistoryBySequenceNum/V001/?'+start_arg+key_arg
+    Rails.logger.error url
+    return url
+  end
+
+  def self.get_matches(start_at_match_seq=nil)
+    url = self.get_matches_url(start_at_match_seq)
+    resp = Net::HTTP.get_response(URI.parse(url))
+    data = JSON.parse(resp.body)
+    return data
+
+  end
+
   def self.get_account_url(account_ids)
     key = self.get_key
     key_arg = "key=#{key}&"
