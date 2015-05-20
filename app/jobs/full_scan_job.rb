@@ -23,8 +23,13 @@ class FullScanJob < ActiveJob::Base
     if data and data['result'] and data['result']['matches'].count
       count = 0
       data['result']['matches'].each do |match|
-        count+=1
-        Match.add_match match
+        if Match.where(match_id: match['match_id']).count == 0
+          count+=1
+          s = Redis::Semaphore.new(:add_to_queue)
+          s.lock do
+            Mqueue.find_or_create_by(match_id: match['match_id']).save
+          end
+        end
       end
       logger.error "Added #{count} full"
       if data['result']['matches'].last and (last_num = data['result']['matches'].last['match_seq_num'])
@@ -37,6 +42,9 @@ class FullScanJob < ActiveJob::Base
     # Do something later
     get_json
     sleep(5)
-    FullScanJob.perform_later
+    queue = Sidekiq::Queue.new(:full_scan)
+    ([queue.limit, 5].max - queue.size).times do
+      self.class.perform_later
+    end
   end
 end

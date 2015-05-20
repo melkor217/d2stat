@@ -11,7 +11,8 @@ s = Rufus::Scheduler.singleton
 GetMatchesJob.perform_later
 FullScanJob.perform_later
 Rails.logger.info "#{Time.now} running rufus"
-s.every '12m' do
+s.every '20m' do
   FullScanJob.perform_later
   GetMatchesJob.perform_later
+  ProcessMatchJob.perform_later
 end

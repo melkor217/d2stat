@@ -147,6 +147,8 @@ GEM
     redis (3.2.1)
     redis-namespace (1.5.2)
       redis (~> 3.0, >= 3.0.4)
+    redis-semaphore (0.2.4)
+      redis
     rspec-core (3.2.3)
       rspec-support (~> 3.2.0)
     rspec-expectations (3.2.1)
@@ -236,6 +238,7 @@ DEPENDENCIES
   jquery-rails
   mongoid
   rails (= 4.2.1)
+  redis-semaphore
   rspec-rails
   rufus-scheduler
   sass-rails (~> 5.0)

@@ -1,8 +1,10 @@
-:timeout: 5
+:timeout: 30
 
 :queues:
   - scan_new_games
   - full_scan
+  - process_match
 :limits:
   scan_new_games: 1
   full_scan: 1
+  process_match: 10

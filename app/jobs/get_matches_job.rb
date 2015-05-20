@@ -14,8 +14,14 @@ class GetMatchesJob < ActiveJob::Base
       logger.info "start from #{start_at_match_id}"
       count = 0
       data['result']['matches'].each do |match|
-        count += 1
-        Match.add_match match
+        if Match.where(match_id: match['match_id']).count == 0
+          count += 1
+          s = Redis::Semaphore.new(:add_to_queue)
+          s.lock do
+            Mqueue.find_or_create_by(match_id: match['match_id']).save
+          end
+        end
+        #Match.add_match match
       end
       logger.error "Added #{count} latest"
       if data['result']['results_remaining'] > 0
@@ -27,7 +33,10 @@ class GetMatchesJob < ActiveJob::Base
   def perform(*args)
     # Do something later
     get_json
-    sleep(5)
-    GetMatchesJob.perform_later
+    sleep(30)
+    queue = Sidekiq::Queue.new(:scan_new_games)
+    ([queue.limit, 5].max - queue.size).times do
+      self.class.perform_later
+    end
   end
 end

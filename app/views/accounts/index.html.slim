@@ -26,17 +26,11 @@ table
       th
 
   tbody
-    - @accounts.each do |account|
+    - @accounts.limit(30).each do |account|
       tr
         td = account.account_id
-        td = account.steamid
-        td = account.profilestate
         td = account.personaname
-        td = account.lastlogoff
         td = account.profileurl
-        td = account.avatar
-        td = account.avatarmedium
-        td = account.avatarfull
         td = account.personastate
         td = account.primaryclanid
         td = account.timecreated

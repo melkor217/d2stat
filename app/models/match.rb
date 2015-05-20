@@ -41,30 +41,32 @@ class Match
 
   index({ match_id: 1 }, { unique: true})
 
-  def self.add_match(match)
-    count = Match.where(match_id: match['match_id']).count
+  def self.add_match(match_id)
+    count = Match.where(match_id: match_id).count
     if count > 1
-      logger.fatal 'ERROR COUNT %i %i' % [count, match['match_id']]
+      logger.fatal 'ERROR COUNT %i %i' % [count, match_id]
     end
     logger.debug count
-    if Match.where(match_id: match['match_id']).count == 0
-      details = SteamAPI::get_match(match['match_id'])
+    if Match.where(match_id: match_id).count == 0
+      details = SteamAPI::get_match(match_id)
       if details and details['result']
-        match = details['result']
-        match['rev'] = 1
+        details['result']['rev'] = 1
+      else
+        Rails.logger.error "No details"
+        return 1
       end
       record = Match.new
-      Player.add_players(match['players'], record)
-      record.update(match.select { |key| key != 'players' and key != 'picks_bans' })
-      match['picks_bans'].each do |picks_ban|
+      Player.add_players(details['result']['players'], record)
+      record.update(details['result'].select { |key| key != 'players' and key != 'picks_bans' })
+      details['result']['picks_bans'].each do |picks_ban|
         pickrecord = PicksBan.new(picks_ban)
         record.picks_bans.push pickrecord
         pickrecord.save
-      end if match['picks_bans']
-      logger.info('saved %s' % match['match_id'])
+      end if details['result']['picks_bans']
+      logger.info('saved %s' % match_id)
       record.save
     else
-      logger.info('skip  %s' % match['match_id'])
+      logger.info('skip  %s' % match_id)
     end
   end
 end
