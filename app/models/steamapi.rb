@@ -4,19 +4,20 @@ class SteamAPI
     key = Key.find_by(name: 'development').value
   end
 
-  def self.get_history_url(start_at_match_id=nil)
+  def self.get_history_url(skill, start_at_match_id=nil)
     key = self.get_key()
     key_arg = "key=#{key}&"
+    skill_arg = "skill=#{skill}&"
     start_arg = ''
     if start_at_match_id
       start_arg = "start_at_match_id=#{start_at_match_id}&"
     end
-    url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?'+start_arg+key_arg
+    url = 'https://api.steampowered.com/IDOTA2Match_570/GetMatchHistory/V001/?'+start_arg+key_arg+skill_arg
     return url
   end
 
-  def self.get_history(start_at_match_id=nil)
-    url = self.get_history_url(start_at_match_id)
+  def self.get_history(skill, start_at_match_id=nil)
+    url = self.get_history_url(skill, start_at_match_id)
     resp = Net::HTTP.get_response(URI.parse(url))
     data = JSON.parse(resp.body)
     return data

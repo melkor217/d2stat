@@ -43,8 +43,9 @@ class FullScanJob < ActiveJob::Base
     get_json
     sleep(5)
     queue = Sidekiq::Queue.new(:full_scan)
-    ([queue.limit, 5].max - queue.size).times do
+    ([queue.limit.to_i, 5].max - queue.size.to_i).times do
       self.class.perform_later
     end
+    logger.info "finished scan #{self.queue_name}"
   end
 end

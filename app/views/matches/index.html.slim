@@ -7,8 +7,7 @@ table
       th Match seq num
       th Start time
       th Lobby type
-      th Radiant team
-      th Dire team
+      th Skill bracket
       th
       th
       th
@@ -20,8 +19,7 @@ table
         td = match.match_seq_num
         td = match.start_time
         td = match.lobby_type
-        td = match.radiant_team_id
-        td = match.dire_team_id
+        td = match.skill
         td = link_to 'Show', match
         td = link_to 'Edit', edit_match_path(match)
         td = link_to 'Destroy', match, data: {:confirm => 'Are you sure?'}, :method => :delete

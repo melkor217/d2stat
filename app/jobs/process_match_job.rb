@@ -4,7 +4,6 @@ class ProcessMatchJob < ActiveJob::Base
   include Sidekiq::Worker
   queue_as :process_match
 
-
   def perform(*args)
     # Do something later
     count = Mqueue.count
@@ -14,14 +13,18 @@ class ProcessMatchJob < ActiveJob::Base
         next if s.exists?
         s.lock do
           logger.info "processing #{match['match_id']}"
-          Match.add_match(match['match_id'])
-          match.remove
+          if Match.add_match(match['match_id'], match['skill'])
+            match.remove
+          else
+            logger.info "will retry later #{match['match_id']}"
+          end
         end
       end
       queue = Sidekiq::Queue.new(:process_match)
-      ([queue.limit, 50].max - queue.size).times do
+      ([queue.limit.to_i, 50].max - queue.size.to_i).times do
         self.class.perform_later
       end
     end
   end
+  logger.info "finished proc #{self.queue_name}"
 end

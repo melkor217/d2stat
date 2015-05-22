@@ -8,5 +8,5 @@ class AdditionalUnit
   field :item_4, type: Integer
   field :item_5, type: Integer
 
-  belongs_to :player
+  embedded_in :player
 end

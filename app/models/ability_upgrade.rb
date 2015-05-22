@@ -4,5 +4,5 @@ class AbilityUpgrade
   field :time, type: Integer
   field :level, type: Integer
 
-  belongs_to :player
+  embedded_in :player
 end

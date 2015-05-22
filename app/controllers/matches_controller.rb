@@ -4,7 +4,9 @@ class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
   def index
-    @matches = Match.all
+    page = params[:page].to_i.abs
+    per_page = 30
+    @matches = Match.order_by(match_id: :desc).skip(page*per_page).limit(per_page)
   end
 
   # GET /matches/1

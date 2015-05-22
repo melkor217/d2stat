@@ -35,13 +35,13 @@ class Match
   field :radiant_guild_logo, type: String
   field :dire_guild_logo, type: String
   field :rev, type: Integer # internal
-  has_many :picks_bans
+  field :skill, type: Integer # internal
+  embeds_many :picks_bans
   has_many :players
-  has_many :scanner_statuses
 
   index({ match_id: 1 }, { unique: true})
 
-  def self.add_match(match_id)
+  def self.add_match(match_id, skill=nil)
     count = Match.where(match_id: match_id).count
     if count > 1
       logger.fatal 'ERROR COUNT %i %i' % [count, match_id]
@@ -52,10 +52,13 @@ class Match
       if details and details['result']
         details['result']['rev'] = 1
       else
-        Rails.logger.error "No details"
-        return 1
+        Rails.logger.error "No details #{match_id}"
+        return false
       end
       record = Match.new
+      if skill
+        record.skill = skill
+      end
       Player.add_players(details['result']['players'], record)
       record.update(details['result'].select { |key| key != 'players' and key != 'picks_bans' })
       details['result']['picks_bans'].each do |picks_ban|

@@ -5,5 +5,5 @@ class PicksBan
   field :team, type: Integer
   field :order, type: Integer
 
-  belongs_to :match
+  embedded_in :match
 end

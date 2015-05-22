@@ -4,7 +4,6 @@ class KeysController < ApplicationController
   # GET /keys
   # GET /keys.json
   def index
-    GetMatchesJob.perform_later
     @keys = Key.all
   end
 

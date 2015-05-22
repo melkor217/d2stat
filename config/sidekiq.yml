@@ -1,10 +1,14 @@
-:timeout: 30
+:timeout: 300
 
 :queues:
-  - scan_new_games
+  - scan_low
+  - scan_high
+  - scan_very_high
   - full_scan
   - process_match
 :limits:
-  scan_new_games: 1
+  scan_low: 1
+  scan_high: 1
+  scan_very_high: 1
   full_scan: 1
-  process_match: 10
+  process_match: 15
