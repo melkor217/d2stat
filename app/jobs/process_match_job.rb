@@ -19,6 +19,7 @@ class ProcessMatchJob < ActiveJob::Base
             logger.info "will retry later #{match['match_id']}"
           end
         end
+        s.delete!
       end
       queue = Sidekiq::Queue.new(:process_match)
       ([queue.limit.to_i, 50].max - queue.size.to_i).times do
