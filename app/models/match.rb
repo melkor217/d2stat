@@ -59,7 +59,12 @@ class Match
       if skill
         record.skill = skill
       end
-      Player.add_players(details['result']['players'], record)
+      if details['result']['players']
+        Player.add_players(details['result']['players'], record)
+      else
+        logger.info "no players for match #{match_id}"
+        logger.info "json #{details['result']}"
+      end
       record.update(details['result'].select { |key| key != 'players' and key != 'picks_bans' })
       details['result']['picks_bans'].each do |picks_ban|
         pickrecord = PicksBan.new(picks_ban)

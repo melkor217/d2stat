@@ -39,7 +39,7 @@ class Player
     end
     account_ids.select! do |id|
       # MAX_INT means anonymous
-      id != 4294967295
+      id and id.to_i < 4294967295
     end
     # database records for each player
 

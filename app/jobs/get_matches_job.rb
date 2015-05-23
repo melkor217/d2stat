@@ -17,7 +17,7 @@ class GetMatchesJob < ActiveJob::Base
           count += 1
           s = Redis::Semaphore.new(:add_to_queue)
           s.lock do
-            Mqueue.find_or_create_by(match_id: match['match_id'], skill: skill).save
+            Mqueue.find_or_create_by(match_id: match['match_id']).update(skill: skill)
           end
         end
         #Match.add_match match

@@ -1,5 +1,20 @@
 p#notice = notice
 
+table
+  thead
+    tr
+      th Name
+      th Slot
+
+    tbody
+      - @match.players.each do |player|
+        tr
+          - if player.account
+            td = link_to player.personaname, player.account
+          - else
+            td Anonymous
+          td = player.player_slot
+
 p
   strong Match:
   = @match.match_id
