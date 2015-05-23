@@ -6,17 +6,17 @@ To make dis work u need to create config/steamsecrets.yml. The only value u shou
 
 You can get your api get at http://steamcommunity.com/dev/apikey
 
-Config example
+Config example:
 
-```defaults:
-  key: 0000000000000050D34D104100000000
+ defaults:
+   key: 0000000000000050D34D104100000000
 
-development:
-  key: 0000000000000050D34D104100000000
+ development:
+   key: 0000000000000050D34D104100000000
 
-prod:
-  key: 0000000000000050D34D104100000000
-```
+ prod:
+   key: 0000000000000050D34D104100000000
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
