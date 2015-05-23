@@ -23,9 +23,9 @@ table
         td = match.start_time
         td = match.lobby_type
         td = match.skill
-        td = link_to 'Show', match_path(:match_id => match.match_id)
-        td = link_to 'Edit', edit_match_path(:match_id => match.match_id)
-        td = link_to 'Destroy', match_path(:match_id => match.match_id), data: {:confirm => 'Are you sure?'}, :method => :delete
+        td = link_to 'Show', match
+        td = link_to 'Edit', edit_match_path(match)
+        td = link_to 'Destroy', match, data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br
 

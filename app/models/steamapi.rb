@@ -1,7 +1,7 @@
 class SteamAPI
 
   def self.get_key
-    key = Key.find_by(name: 'development').value
+    return STEAM_CONFIG['key']
   end
 
   def self.get_history_url(skill, start_at_match_id=nil)

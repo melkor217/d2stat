@@ -36,6 +36,7 @@ class Match
   field :dire_guild_logo, type: String
   field :rev, type: Integer # internal
   field :skill, type: Integer # internal
+  field :scan_time, type: DateTime
   embeds_many :picks_bans
   has_many :players
 
@@ -48,7 +49,7 @@ class Match
       logger.fatal 'ERROR COUNT %i %i' % [count, match_id]
     end
     logger.debug count
-    if Match.where(match_id: match_id).count == 0
+    if Match.where(id: match_id).count == 0
       details = SteamAPI::get_match(match_id)
       if details and details['result']
         details['result']['rev'] = 1
@@ -57,6 +58,7 @@ class Match
         return false
       end
       record = Match.new(details['result'].select { |key| key != 'players' and key != 'picks_bans' })
+      record.scan_time = Time.now
       if skill
         record.skill = skill
       end

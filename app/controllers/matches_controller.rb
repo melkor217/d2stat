@@ -6,7 +6,7 @@ class MatchesController < ApplicationController
   def index
     page = params[:page].to_i.abs
     per_page = 30
-    @matches = Match.order_by(match_id: :desc).skip(page*per_page).limit(per_page)
+    @matches = Match.order_by(id: :desc).skip(page*per_page).limit(per_page)
   end
 
   # GET /matches/1
@@ -66,7 +66,7 @@ class MatchesController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_match
-      @match = Match.find_by(match_id: params[:match_id])
+      @match = Match.find(params[:id])
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.
