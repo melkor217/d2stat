@@ -4,7 +4,7 @@
 
 To make dis work u need to create config/steamsecrets.yml. The only value u should write in is your SteamAPI key.
 
-You can get your api get at http://steamcommunity.com/dev/apikey
+You can get your API key at http://steamcommunity.com/dev/apikey
 
 Config example:
 
