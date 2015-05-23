@@ -40,6 +40,7 @@ class Match
   has_many :players
 
   index({ match_id: 1 }, { unique: true})
+  field :_id, type: Integer, default: ->{ match_id }
 
   def self.add_match(match_id, skill=nil)
     count = Match.where(match_id: match_id).count
@@ -55,7 +56,7 @@ class Match
         Rails.logger.error "No details #{match_id}"
         return false
       end
-      record = Match.new
+      record = Match.new(details['result'].select { |key| key != 'players' and key != 'picks_bans' })
       if skill
         record.skill = skill
       end
@@ -65,7 +66,6 @@ class Match
         logger.info "no players for match #{match_id}"
         logger.info "json #{details['result']}"
       end
-      record.update(details['result'].select { |key| key != 'players' and key != 'picks_bans' })
       details['result']['picks_bans'].each do |picks_ban|
         pickrecord = PicksBan.new(picks_ban)
         record.picks_bans.push pickrecord

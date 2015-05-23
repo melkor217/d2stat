@@ -28,6 +28,7 @@ class Account
   has_many :players
 
   index({ account_id: 1 }, { unique: true})
+  field :_id, type: Integer, default: ->{ account_id }
 
   def self.add_account(accounts, account_id, player)
     matched = accounts.select do |account|
@@ -38,10 +39,9 @@ class Account
       if criteria.exists?
         record = criteria.first
       else
-        record = Account.new
+        record = Account.new(account)
       end
 
-      record.update(account)
       record.last_check = Time.now
       record.players.push player
       record.save

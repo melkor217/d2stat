@@ -28,7 +28,7 @@ module D2stat
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
-    config.web_console.whitelisted_ips = '10.217.0.2'
+    config.web_console.whitelisted_ips = '127.0.0.1'
     config.active_job.queue_adapter = :sidekiq
     Mongoid.logger.level = Logger::ERROR
     Moped.logger.level = Logger::ERROR
