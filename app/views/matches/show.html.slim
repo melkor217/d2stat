@@ -1,19 +1,63 @@
 p#notice = notice
 
 table
-  thead
+  tbody
     tr
-      th Name
-      th Slot
+      td Radiant
+    tr
+      td
+        table
+          thead
+            tr
+              th Name
+              th Level
+              th K
+              th D
+              th A
+              th Gold
+              th LH
 
-    tbody
-      - @match.players.each do |player|
-        tr
-          - if player.account
-            td = link_to player.personaname, player.account
-          - else
-            td Anonymous
-          td = player.player_slot
+            tbody
+              - @match.radiant_players.each do |player|
+                tr
+                  - if player.account
+                    td = link_to player.personaname, player.account
+                  - else
+                    td Anonymous
+                  td = player.level
+                  td = player.kills
+                  td = player.deaths
+                  td = player.assists
+                  td = player.gold
+                  td = player.last_hits
+    tr
+      td Dire
+    tr
+      td
+        table
+          thead
+            tr
+              th Name
+              th Level
+              th K
+              th D
+              th A
+              th Gold
+              th LH
+
+            tbody
+              - @match.dire_players.each do |player|
+                tr
+                  - if player.account
+                    td = link_to player.personaname, player.account
+                  - else
+                    td Anonymous
+                  td = player.level
+                  td = player.kills
+                  td = player.deaths
+                  td = player.assists
+                  td = player.gold
+                  td = player.last_hits
 
 p
   strong Match:
