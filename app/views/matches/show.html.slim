@@ -1,83 +1,73 @@
 p#notice = notice
 
-table
-  tbody
-    tr
-      td Radiant
-    tr
-      td
-        table
-          thead
-            tr
-              th Name
-              th Level
-              th K
-              th D
-              th A
-              th Gold
-              th LH
+h1 Match #{@match.id}
 
-            tbody
-              - @match.radiant_players.each do |player|
-                tr
-                  - if player.account
-                    td = link_to player.personaname, player.account
-                  - else
-                    td Anonymous
-                  td = player.level
-                  td = player.kills
-                  td = player.deaths
-                  td = player.assists
-                  td = player.gold
-                  td = player.last_hits
-    tr
-      td Dire
-    tr
-      td
-        table
-          thead
-            tr
-              th Name
-              th Level
-              th K
-              th D
-              th A
-              th Gold
-              th LH
+h3 Radiant
 
-            tbody
-              - @match.dire_players.each do |player|
-                tr
-                  - if player.account
-                    td = link_to player.personaname, player.account
-                  - else
-                    td Anonymous
-                  td = player.level
-                  td = player.kills
-                  td = player.deaths
-                  td = player.assists
-                  td = player.gold
-                  td = player.last_hits
+table#match
+  thead
+    tr
+      th Name
+      th Level
+      th K
+      th D
+      th A
+      th Gold
+      th LH
+      th DN
 
-p
-  strong Match:
-  = @match.match_id
-p
-  strong Match seq num:
-  = @match.match_seq_num
+    tbody
+      - @match.radiant_players.each do |player|
+        tr
+          - if player.account
+            td = link_to player.personaname, player.account
+          - else
+            td Anonymous
+          td = player.level
+          td = player.kills
+          td = player.deaths
+          td = player.assists
+          td = player.gold
+          td = player.last_hits
+          td = player.denies
+
+h3 Dire
+
+table#match
+  thead
+    tr
+      th Name
+      th Level
+      th K
+      th D
+      th A
+      th Gold
+      th LH
+      th DN
+
+    tbody
+      - @match.dire_players.each do |player|
+        tr
+          - if player.account
+            td = link_to player.personaname, player.account
+          - else
+            td Anonymous
+          td = player.level
+          td = player.kills
+          td = player.deaths
+          td = player.assists
+          td = player.gold
+          td = player.last_hits
+          td = player.denies
+hr
 p
   strong Start time:
-  = @match.start_time
+  |  #{@match.start_time}
 p
   strong Lobby type:
-  = @match.lobby_type
+  |  #{@match.lobby_type}
 p
-  strong Radiant team:
-  = @match.radiant_team_id
-p
-  strong Dire team:
-  = @match.dire_team_id
+  strong Region:
+  |  #{@match.region.name}
 
-= link_to 'Edit', edit_match_path(@match)
-'|
 = link_to 'Back', matches_path

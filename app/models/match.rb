@@ -2,13 +2,12 @@ class Match
   include Mongoid::Document
   field :match_id, type: Integer
   field :match_seq_num, type: Integer
-  field :start_time, type: Integer
+  field :start_time, type: DateTime
   field :lobby_type, type: Integer
   field :radiant_team_id, type: Integer
   field :dire_team_id, type: Integer
   field :radiant_win, type: Boolean
   field :duration, type: Integer
-  field :start_time, type: Integer
   field :tower_status_radiant, type: Integer
   field :tower_status_dire, type: Integer
   field :barracks_status_radiant, type: Integer
@@ -39,6 +38,7 @@ class Match
   field :scan_time, type: DateTime
   embeds_many :picks_bans
   has_many :players
+  belongs_to :region
 
   index({ match_id: 1 }, { unique: true})
   field :_id, type: Integer, default: ->{ match_id }
@@ -69,7 +69,12 @@ class Match
         Rails.logger.error "No details #{match_id}"
         return false
       end
-      record = Match.new(details['result'].select { |key| key != 'players' and key != 'picks_bans' })
+      record = Match.new(details['result'].select do |key|
+                           # fields we don't wanna save as is
+                           not %w{players pick_bans cluster start_time}.include? key
+                         end)
+      record.start_time = DateTime.strptime(details['result']['start_time'].to_s, '%s')
+      record.region_id = details['result']['cluster']
       record.scan_time = Time.now
       if skill
         record.skill = skill

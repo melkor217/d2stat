@@ -1,0 +1,11 @@
+h1 Global stats
+p
+  = link_to 'Last matches', @matches
+p
+  | Matches queued for processing: #{@mqcount}
+  br
+  | Matches processed for last hour: #{@last_hour_matches}
+  br
+  | Total matches processed: #{@matches.count}
+  br
+  | Total account processed: #{@accounts.count}

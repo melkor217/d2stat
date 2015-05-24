@@ -5,3 +5,13 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+
+data = JSON.parse(IO.read('data/regions.json'))
+if data['regions']
+  Region.all.delete
+  data['regions'].each do |region|
+    print region
+    Region.new(region).save
+  end
+end
+
