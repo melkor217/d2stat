@@ -63,13 +63,11 @@ class Player
       record = Player.new
       player['ability_upgrades'].each do |abi_upgrade|
         abirecord = record.ability_upgrades.new(abi_upgrade)
-        record.ability_upgrades.push abirecord
-        abirecord.save
+        record.ability_upgrades.append abirecord
       end if player['ability_upgrades']
       player['additional_units'].each do |additional_unit|
         unitrecord = record.additional_units.new(additional_unit)
-        record.additional_units.push unitrecord
-        unitrecord.save
+        record.additional_units.append unitrecord
       end if player['additional_units']
       match.players.push record
       record.update(player.select { |key| key != 'ability_upgrades' and key != 'additional_units' })

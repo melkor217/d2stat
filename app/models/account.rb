@@ -44,7 +44,7 @@ class Account
       end
 
       record.last_check = Time.now
-      record.players.push player
+      record.players.append player
       record.save
     end
   end

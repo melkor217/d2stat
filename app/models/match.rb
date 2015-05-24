@@ -82,8 +82,7 @@ class Match
       end
       details['result']['picks_bans'].each do |picks_ban|
         pickrecord = PicksBan.new(picks_ban)
-        record.picks_bans.push pickrecord
-        pickrecord.save
+        record.picks_bans.append pickrecord
       end if details['result']['picks_bans']
       logger.info('saved %s' % match_id)
       record.save
