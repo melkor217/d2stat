@@ -31,11 +31,12 @@ class Account
   field :_id, type: Integer, default: ->{ account_id }
 
   def self.add_account(accounts, account_id, player)
+    # Adds/updates account from json account data, then links it with player
     matched = accounts.select do |account|
       account['account_id'] == account_id
     end
     if account = matched.first
-      criteria = Account.where(account_id: account_id)
+      criteria = Account.where(id: account_id)
       if criteria.exists?
         record = criteria.first
       else

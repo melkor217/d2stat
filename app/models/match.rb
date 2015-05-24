@@ -43,8 +43,20 @@ class Match
   index({ match_id: 1 }, { unique: true})
   field :_id, type: Integer, default: ->{ match_id }
 
+  def radiant_players()
+    self.players.select do |player|
+      (0..4).include? player.player_slot
+    end
+  end
+
+  def dire_players()
+    self.players.select do |player|
+      (128..132).include? player.player_slot
+    end
+  end
+
   def self.add_match(match_id, skill=nil)
-    count = Match.where(match_id: match_id).count
+    count = Match.where(id: match_id).count
     if count > 1
       logger.fatal 'ERROR COUNT %i %i' % [count, match_id]
     end
