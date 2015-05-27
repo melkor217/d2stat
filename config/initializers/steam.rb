@@ -10,4 +10,10 @@ else
   raise "Steam key is missing. Goto README.rdoc"
 end
 
-QWE_LOL = 1
+Rails.application.config.middleware.use OmniAuth::Builder do
+  provider :steam, STEAM_CONFIG['key']
+end
+
+Dota.configure do |config|
+  config.api_key = STEAM_CONFIG['key']
+end

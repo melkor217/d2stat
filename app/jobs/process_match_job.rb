@@ -8,15 +8,15 @@ class ProcessMatchJob < ActiveJob::Base
     # Do something later
     count = Mqueue.count
     if count > 100
-      Mqueue.skip(rand(count-30)).limit(20).each do |match|
-        s = Redis::Semaphore.new(match['match_id'])
+      Mqueue.skip(rand(count-30)).limit(20).each do |qmatch|
+        s = Redis::Semaphore.new(qmatch['match_id'])
         next if s.exists?
         s.lock do
-          logger.info "processing #{match['match_id']}"
-          if Match.add_match(match['match_id'], match['skill'])
-            match.remove
+          logger.info "processing #{qmatch['match_id']}"
+          if Match.add_match(qmatch['match_id'], qmatch['skill'])
+            qmatch.remove
           else
-            logger.info "will retry later #{match['match_id']}"
+            logger.info "will retry later #{qmatch['match_id']}"
           end
         end
         s.delete!
@@ -27,5 +27,6 @@ class ProcessMatchJob < ActiveJob::Base
       end
     end
   end
+
   logger.info "finished proc #{self.queue_name}"
 end

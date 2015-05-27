@@ -62,7 +62,7 @@ class Match
     end
     logger.debug count
     if Match.where(id: match_id).count == 0
-      details = SteamAPI::get_match(match_id)
+      details = Dota.api.get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id)
       if details and details['result']
         details['result']['rev'] = 1
       else
@@ -81,6 +81,7 @@ class Match
         record.skill = skill
       end
       if details['result']['players']
+        puts details['result']['players']
         Player.add_players(details['result']['players'], record)
       else
         logger.info "no players for match #{match_id}"

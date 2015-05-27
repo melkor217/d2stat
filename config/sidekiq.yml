@@ -1,4 +1,4 @@
-:timeout: 300
+:timeout: 5
 :logfile: ./log/sidekiq.log
 :queues:
   - scan_low

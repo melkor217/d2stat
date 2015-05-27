@@ -8,8 +8,8 @@ class GetMatchesJob < ActiveJob::Base
 
 
   def get_json(skill, start_at_match_id=nil)
-    data = SteamAPI.get_history(skill, start_at_match_id)
-    if not data.empty? and data['result']['num_results'] > 0
+    data = Dota.api.get('IDOTA2Match_570', 'GetMatchHistory', skill: skill, start_at_match_id: start_at_match_id)
+    if not data.empty? and data['result'] and data['result']['num_results'] > 0
       logger.info "start from #{start_at_match_id}"
       count = 0
       data['result']['matches'].each do |match|

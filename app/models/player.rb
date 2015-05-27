@@ -43,9 +43,12 @@ class Player
     end
     # database records for each player
 
-    accounts_data = SteamAPI.get_account(account_ids)
+    accounts_data = Dota.api.get('ISteamUser', 'GetPlayerSummaries', steamids: account_ids.map! do |id|
+                                                                                 id.to_i + 76561197960265728
+                                                                                end.join(',')
+    )
     if accounts_data['response']['players']
-      accounts = accounts_data['response']['players']
+      accounts = accounts_data['response']['players']['player']
     else
       accounts = []
     end
@@ -53,7 +56,7 @@ class Player
     accounts.each do |account|
       # players that matches account
       matched_players = players.select do |player|
-        player['account_id'] == account['account_id'].to_i
+        player['account_id'].to_i == (account['steamid'].to_i - 76561197960265728)
       end
       matched_players.each do |player|
         player['personaname'] = account['personaname']

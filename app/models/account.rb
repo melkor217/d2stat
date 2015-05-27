@@ -1,7 +1,7 @@
 class Account
   include Mongoid::Document
-  field :account_id, type: BigDecimal # 32bit
-  field :steamid, type: BigDecimal    # 64bit
+  field :account_id, type: Integer # 32bit
+  field :steamid, type: Integer    # 64bit
   field :profilestate, type: Integer
   field :personaname, type: String
   field :lastlogoff, type: Integer
@@ -26,6 +26,7 @@ class Account
   field :gameserverip, type: String
   field :gameserversteamid, type: Integer
   has_many :players
+  has_many :authorizations
 
   index({ account_id: 1 }, { unique: true})
   field :_id, type: Integer, default: ->{ account_id }

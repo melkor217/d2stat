@@ -20,7 +20,7 @@ class FullScanJob < ActiveJob::Base
       start_at_seq_num = VERY_FIRST_MATCH
       logger.warn 'NO SEQ NUMBER'
     end
-    data = SteamAPI.get_matches(start_at_seq_num)
+    data = Dota.api.get('IDOTA2Match_570', 'GetMatchHistoryBySequenceNum', start_at_match_seq_num: 240)
     if data and data['result'] and data['result']['matches'].count
       count = 0
       data['result']['matches'].each do |match|

@@ -46,9 +46,12 @@ end
 
 
 gem 'mongoid'
-gem 'slim-rails'
-gem 'sidekiq'
-gem 'sidekiq-limit_fetch'
+gem 'slim-rails' # we like slim templates
+gem 'sidekiq' # workers
+gem 'sidekiq-limit_fetch' # per-queue limits for workers
 gem 'rufus-scheduler'
 gem 'sinatra'
-gem 'redis-semaphore'
+gem 'redis-semaphore' # some jobs require locks
+gem 'omniauth-steam'
+gem 'dota'
+
