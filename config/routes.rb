@@ -4,7 +4,6 @@ Rails.application.routes.draw do
   get   '/login', :to => 'sessions#new', :as => :login
   post '/auth/:provider/callback', :to => 'sessions#create'
   #post '/auth/failure', :to => 'sessions#failure'
-
   resources :mqueues
   resources :scanner_statuses
   resources :picks_bans

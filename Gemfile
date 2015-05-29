@@ -54,4 +54,5 @@ gem 'sinatra'
 gem 'redis-semaphore' # some jobs require locks
 gem 'omniauth-steam'
 gem 'dota', :git => 'https://github.com/melkor217/dota.git'
+gem 'devise'
 

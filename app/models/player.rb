@@ -40,8 +40,6 @@ class Player
         steam_ids.append(player['account_id'] + 76561197960265728)
       end
     end
-    puts steam_ids.join(',')
-    puts players
     accounts_data = Dota.api.get('ISteamUser', 'GetPlayerSummaries', 'v002', steamids: steam_ids.join(','))
     if accounts_data and
         accounts_data['response'] and
@@ -51,18 +49,11 @@ class Player
       accounts = []
     end
     logger.info "#{accounts.size} accounts"
-    puts "#{accounts.size} accounts"
     records = players.map do |player|
       matched_accs = accounts.select do |account|
-        puts "#{player['account_id'].to_i} == 76561197960265728 - #{account['steamid'].to_i} (#{-76561197960265728 + account['steamid'].to_i})"
         player['account_id'].to_i == (-76561197960265728 + account['steamid'].to_i)
       end
       if matched_accs.first
-        puts '___'
-        print matched_accs
-        puts '___'
-        print matched_accs[0]
-        puts '___'
         player['personaname'] = matched_accs.first['personaname']
       end
       # database records for each player
@@ -79,6 +70,9 @@ class Player
       record.match = match
       record.update(player.select { |key| key != 'ability_upgrades' and key != 'additional_units' })
       Account.add_account(accounts, player['account_id'], record)
+      record
+    end
+    records.each do |record|
       record.save
     end
   end

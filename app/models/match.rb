@@ -80,16 +80,16 @@ class Match
       if skill
         record.skill = skill
       end
+      details['result']['picks_bans'].each do |picks_ban|
+        pickrecord = PicksBan.new(picks_ban)
+        record.picks_bans.append pickrecord
+      end if details['result']['picks_bans']
       if details['result']['players'].count > 0
         Player.add_players(details['result']['players'], record)
       else
         logger.info "no players for match #{match_id}"
         logger.info "json #{details['result']}"
       end
-      details['result']['picks_bans'].each do |picks_ban|
-        pickrecord = PicksBan.new(picks_ban)
-        record.picks_bans.append pickrecord
-      end if details['result']['picks_bans']
       logger.info('saved %s' % match_id)
       record.save
     else

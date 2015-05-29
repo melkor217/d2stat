@@ -35,5 +35,12 @@ Rails.application.configure do
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
+  logger = Logger.new(File.join( Rails.root, "log", "#{ Rails.env}.log"), 'daily')
+  logger.level = Logger::INFO
+  logger.formatter = proc do |severity, datetime, progname, msg|
+    "#{datetime.strftime("%B %d %H:%M:%S")} #{Socket.gethostname}, [#{$$}]:, #{severity}  d2stat, #{msg}\n"
+  end
 
+  tag_log = ActiveSupport::TaggedLogging.new(logger)
+  config.logger = tag_log
 end

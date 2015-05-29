@@ -31,7 +31,7 @@ class Account
   index({ account_id: 1 }, { unique: true})
   field :_id, type: Integer, default: ->{ account_id }
 
-  def self.add_account(accounts, account_id, player)
+  def self.add_account(accounts, account_id, player=nil)
     # Adds/updates account from json account data, then links it with player
     matched = accounts.select do |account|
       account['steamid'].to_i == (account_id.to_i + 76561197960265728)
@@ -45,9 +45,13 @@ class Account
         record = Account.new(account)
       end
       record.last_check = Time.now
-      player.account = record
+      if player
+        player.account = record
+      end
       record.save
+      return record
+    else
+     return false
     end
   end
-
 end
