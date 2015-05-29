@@ -1,8 +1,8 @@
 require 'sidekiq/web'
 
 Rails.application.routes.draw do
-  get   '/login', :to => 'sessions#new', :as => :login
   post '/auth/:provider/callback', :to => 'sessions#create'
+  get '/signout', :to => 'sessions#destroy', :as => :logout
   #post '/auth/failure', :to => 'sessions#failure'
   resources :mqueues
   resources :scanner_statuses

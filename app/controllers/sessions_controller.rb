@@ -2,7 +2,6 @@ class SessionsController < ApplicationController
   skip_before_filter :verify_authenticity_token, :only => :create
 
   def new
-    @qwe = request.env['omniauth.auth']['provider']
   end
 
   def create
@@ -10,7 +9,8 @@ class SessionsController < ApplicationController
 
     @authorization = Authorization.where(provider: auth_hash["provider"], uid: auth_hash["uid"]).first
     if @authorization
-      render :text => "Welcome back #{@authorization.account.account_id}! You have already signed up."
+      #render :text => "Welcome back #{@authorization.account.account_id}! You have already signed up."
+      session[:account] = @authorization.account
     else
       id64 = auth_hash['uid'].to_i
       id32 = id64 - 76561197960265728
@@ -30,10 +30,15 @@ class SessionsController < ApplicationController
       authrecord.save
       account.save
 
-      render :text => "Hi #{account.account_id}! You've signed up."
+      #render :text => "Hi #{account.account_id}! You've signed up."
     end
+    redirect_to :stats
   end
 
   def failure
+  end
+
+  def destroy
+    session[:account] = nil
   end
 end

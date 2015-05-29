@@ -17,3 +17,4 @@ end
 Dota.configure do |config|
   config.api_key = STEAM_CONFIG['key']
 end
+

@@ -6,5 +6,4 @@ class Authorization
   field :account_id, type: Integer
   belongs_to :account
 
-  devise :omniauthable, :omniauth_providers => [:steam]
 end

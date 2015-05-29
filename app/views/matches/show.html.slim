@@ -62,12 +62,12 @@ table#match
 hr
 p
   strong Start time:
-  |  #{@match.start_time}
+  =< @match.start_time
 p
   strong Lobby type:
-  |  #{@match.lobby_type}
+  =< @match.lobby_type
 p
   strong Region:
-  |  #{@match.region.name}
+  =< @match.region.name
 
 = link_to 'Back', matches_path
