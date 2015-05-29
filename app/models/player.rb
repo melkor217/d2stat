@@ -33,37 +33,40 @@ class Player
 
 
   def self.add_players(players, match)
-    # array of 32bit account_ids
-    account_ids = players.map do |player|
-      player['account_id']
+    # array of 64bit account_ids
+    steam_ids = []
+    players.each do |player|
+      if player and player['account_id']
+        steam_ids.append(player['account_id'] + 76561197960265728)
+      end
     end
-    account_ids.select! do |id|
-      # MAX_INT means anonymous
-      id and id.to_i < 4294967295
-    end
-    # database records for each player
-
-    accounts_data = Dota.api.get('ISteamUser', 'GetPlayerSummaries', steamids: account_ids.map! do |id|
-                                                                                 id.to_i + 76561197960265728
-                                                                                end.join(',')
-    )
-    if accounts_data['response']['players']
-      accounts = accounts_data['response']['players']['player']
+    puts steam_ids.join(',')
+    puts players
+    accounts_data = Dota.api.get('ISteamUser', 'GetPlayerSummaries', 'v002', steamids: steam_ids.join(','))
+    if accounts_data and
+        accounts_data['response'] and
+        accounts_data['response']['players'].count
+      accounts = accounts_data['response']['players']
     else
       accounts = []
     end
     logger.info "#{accounts.size} accounts"
-    accounts.each do |account|
-      # players that matches account
-      matched_players = players.select do |player|
-        player['account_id'].to_i == (account['steamid'].to_i - 76561197960265728)
-      end
-      matched_players.each do |player|
-        player['personaname'] = account['personaname']
-      end
-    end
+    puts "#{accounts.size} accounts"
     records = players.map do |player|
-      record = Player.new
+      matched_accs = accounts.select do |account|
+        puts "#{player['account_id'].to_i} == 76561197960265728 - #{account['steamid'].to_i} (#{-76561197960265728 + account['steamid'].to_i})"
+        player['account_id'].to_i == (-76561197960265728 + account['steamid'].to_i)
+      end
+      if matched_accs.first
+        puts '___'
+        print matched_accs
+        puts '___'
+        print matched_accs[0]
+        puts '___'
+        player['personaname'] = matched_accs.first['personaname']
+      end
+      # database records for each player
+      record = Player.new(player)
       player['ability_upgrades'].each do |abi_upgrade|
         abirecord = record.ability_upgrades.new(abi_upgrade)
         record.ability_upgrades.append abirecord
@@ -72,7 +75,8 @@ class Player
         unitrecord = record.additional_units.new(additional_unit)
         record.additional_units.append unitrecord
       end if player['additional_units']
-      match.players.push record
+      #match.players.push player
+      record.match = match
       record.update(player.select { |key| key != 'ability_upgrades' and key != 'additional_units' })
       Account.add_account(accounts, player['account_id'], record)
       record.save

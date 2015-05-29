@@ -34,18 +34,18 @@ class Account
   def self.add_account(accounts, account_id, player)
     # Adds/updates account from json account data, then links it with player
     matched = accounts.select do |account|
-      account['account_id'] == account_id
+      account['steamid'].to_i == (account_id.to_i + 76561197960265728)
     end
     if account = matched.first
+      account['account_id'] =  account['steamid'].to_i - 76561197960265728
       criteria = Account.where(id: account_id)
       if criteria.exists?
         record = criteria.first
       else
         record = Account.new(account)
       end
-
       record.last_check = Time.now
-      record.players.append player
+      player.account = record
       record.save
     end
   end

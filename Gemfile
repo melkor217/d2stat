@@ -53,5 +53,5 @@ gem 'rufus-scheduler'
 gem 'sinatra'
 gem 'redis-semaphore' # some jobs require locks
 gem 'omniauth-steam'
-gem 'dota'
+gem 'dota', :git => 'https://github.com/melkor217/dota.git'
 
