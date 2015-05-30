@@ -4,46 +4,14 @@ table
   thead
     tr
       th Account
-      th Steamid
-      th Profilestate
       th Personaname
-      th Lastlogoff
-      th Profileurl
-      th Avatar
-      th Avatarmedium
-      th Avatarfull
-      th Personastate
-      th Primaryclanid
-      th Timecreated
-      th Personastateflags
-      th Gameextrainfo
-      th Gameid
-      th Loccountrycode
-      th Locstatecode
-      th Last check
-      th
-      th
-      th
 
   tbody
     - @accounts.limit(30).each do |account|
       tr
         td = account.account_id
-        td = account.personaname
-        td = account.profileurl
-        td = account.personastate
-        td = account.primaryclanid
-        td = account.timecreated
-        td = account.personastateflags
-        td = account.gameextrainfo
-        td = account.gameid
-        td = account.loccountrycode
-        td = account.locstatecode
-        td = account.last_check
-        td = link_to 'Show', account
-        td = link_to 'Edit', edit_account_path(account)
-        td = link_to 'Destroy', account, data: {:confirm => 'Are you sure?'}, :method => :delete
+        td
+          = link_to account.personaname, account
 
 br
 
-= link_to 'New Account', new_account_path
