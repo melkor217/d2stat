@@ -1,6 +1,18 @@
 require 'sidekiq/web'
 
+class AuthConstraint
+  def self.matches?(request)
+    request.session[:init] = true # Starts up the session so we can access values from it later.
+    request.session['admin']
+  end
+end
+
+
 Rails.application.routes.draw do
+
+
+
+
   post '/auth/:provider/callback', :to => 'sessions#create'
   get '/signout', :to => 'sessions#destroy', :as => :logout
   #post '/auth/failure', :to => 'sessions#failure'
@@ -16,9 +28,9 @@ Rails.application.routes.draw do
   resources :matches
   resources :stats
 
-  root 'stats#index'
+  mount Sidekiq::Web => '/sidekiq', :constraints => AuthConstraint
 
-  mount Sidekiq::Web => '/sidekiq'
+  root 'stats#index'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

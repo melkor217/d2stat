@@ -8,6 +8,7 @@ s = Rufus::Scheduler.singleton
 
 # Awesome recurrent task...
 #
+=begin
 GetMatchesJob.set(queue: :scan_low).perform_later 1
 GetMatchesJob.set(queue: :scan_high).perform_later 2
 GetMatchesJob.set(queue: :scan_very_high).perform_later 3
@@ -21,3 +22,5 @@ s.every '20m' do
   GetMatchesJob.set(queue: :scan_very_high).perform_later 3
   ProcessMatchJob.perform_later
 end
+
+=end

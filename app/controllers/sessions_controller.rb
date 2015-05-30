@@ -11,6 +11,7 @@ class SessionsController < ApplicationController
     if @authorization
       #render :text => "Welcome back #{@authorization.account.account_id}! You have already signed up."
       session[:account] = @authorization.account
+      session[:admin] = @authorization[:admin]
     else
       id64 = auth_hash['uid'].to_i
       id32 = id64 - 76561197960265728
@@ -22,6 +23,7 @@ class SessionsController < ApplicationController
         logger.error accounts_data
         accounts = accounts_data['response']['players']
         account = Account.add_account(accounts, id32)
+        Pqueue.find_or_create_by(account_id: account['account_id']).save
       end
       logger.error 'LOL HA'
       logger.error account
