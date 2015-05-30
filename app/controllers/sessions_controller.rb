@@ -31,6 +31,7 @@ class SessionsController < ApplicationController
       account.authorizations.push authrecord
       authrecord.save
       account.save
+      session[:account] = account
 
       #render :text => "Hi #{account.account_id}! You've signed up."
     end

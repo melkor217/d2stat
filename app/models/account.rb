@@ -43,6 +43,7 @@ class Account
         record = criteria.first
       else
         record = Account.new(account)
+        Pqueue.find_or_create_by(account_id: account['account_id'])
       end
       record.last_check = Time.now
       if player

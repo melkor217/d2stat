@@ -10,6 +10,7 @@ html
   body
     - if session['account']
       = link_to :stats
+        = session['account']['personaname']
         img src=session['account']['avatar']
       = link_to 'Sign out', :logout
     - else
