@@ -8,14 +8,17 @@ html
     = csrf_meta_tags
 
   body
-    - if session['account']
-      = link_to :stats
-        = session['account']['personaname']
-        img src=session['account']['avatar']
-      = link_to 'Sign out', :logout
-    - else
-      h1
-        = link_to 'd2stat', :stats
-      = link_to 'Sign in', '/auth/steam'
+    div.header
+      div.logo
+        h1
+          = link_to 'D2stat', :stats
+      div.user
+        - if session['account']
+          = link_to account_path(session['account']['account_id'])
+            = session['account']['personaname']
+            img src=session['account']['avatar']
+          = link_to 'Sign out', :logout
+        - else
+          = link_to 'Sign in', '/auth/steam'
     hr
     = yield

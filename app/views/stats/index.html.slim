@@ -8,5 +8,7 @@ p
   br
   | Total matches processed: #{@matches.count}
   br
-  | Total accounts processed: #{@accounts.count}
+  | Total accounts added: #{@accounts.count}
+  br
+  | Accounts processed: #{@accounts.count - @pqcount}
 = @qwe

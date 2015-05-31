@@ -31,6 +31,7 @@ class Player
   belongs_to :match, index: true
   belongs_to :account, index: true
 
+  field :_id, type: String, default: ->{ match_id.to_s + '.' + player_slot.to_s }
 
   def self.add_players(players, match)
     # array of 64bit account_ids
@@ -57,6 +58,7 @@ class Player
         player['personaname'] = matched_accs.first['personaname']
       end
       # database records for each player
+      player['match_id'] = match.id
       record = Player.new(player)
       player['ability_upgrades'].each do |abi_upgrade|
         abirecord = record.ability_upgrades.new(abi_upgrade)
@@ -67,7 +69,7 @@ class Player
         record.additional_units.append unitrecord
       end if player['additional_units']
       #match.players.push player
-      record.match = match
+      #record.match = match
       record.update(player.select { |key| key != 'ability_upgrades' and key != 'additional_units' })
       Account.add_account(accounts, player['account_id'], record)
       record

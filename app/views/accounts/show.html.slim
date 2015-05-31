@@ -1,5 +1,7 @@
 p#notice = notice
 
+= link_to 'Matches', matchlist_path
+
 p
   strong Account:
   = @account.account_id
@@ -55,6 +57,3 @@ p
   strong Last check:
   = @account.last_check
 
-= link_to 'Edit', edit_account_path(@account)
-'|
-= link_to 'Back', accounts_path

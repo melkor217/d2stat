@@ -12,5 +12,5 @@
   scan_high: 1
   scan_very_high: 1
   full_scan: 1
-  process_match: 15
+  process_match: 18
   process_players: 1

@@ -11,6 +11,7 @@ class ProcessMatchJob < ActiveJob::Base
       Mqueue.skip(rand(count-30)).limit(20).each do |qmatch|
         s = Redis::Semaphore.new(qmatch['match_id'])
         next if s.exists?
+        logger.info "/locking #{qmatch['match_id']}"
         s.lock do
           logger.info "processing #{qmatch['match_id']}"
           if Match.add_match(qmatch['match_id'], qmatch['skill'])
@@ -19,6 +20,7 @@ class ProcessMatchJob < ActiveJob::Base
             logger.info "will retry later #{qmatch['match_id']}"
           end
         end
+        logger.info "/unlocking #{qmatch['match_id']}"
         s.delete!
       end
       queue = Sidekiq::Queue.new(:process_match)

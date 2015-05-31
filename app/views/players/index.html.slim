@@ -1,25 +1,24 @@
-h1 Listing players
+h1 Listing matches
 
 table
   thead
     tr
-      th Account
+      th Match
+      th Lobby type
       th Player slot
       th Hero
-      th
-      th
-      th
 
   tbody
     - @players.each do |player|
       tr
-        td = player.account_id
+        td
+          = link_to player.match.match_id, player.match
+        td = player.match.lobby.name
         td = player.player_slot
         td = player.hero_id
-        td = link_to 'Show', player
-        td = link_to 'Edit', edit_player_path(player)
-        td = link_to 'Destroy', player, data: {:confirm => 'Are you sure?'}, :method => :delete
+        //td = link_to 'Show', player
+        //td = link_to 'Edit', edit_player_path(player)
+        //td = link_to 'Destroy', player, data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br
 
-= link_to 'New Player', new_player_path

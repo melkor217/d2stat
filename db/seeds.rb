@@ -6,12 +6,19 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 
-data = JSON.parse(IO.read('data/regions.json'))
-if data['regions']
+regions = JSON.parse(IO.read('data/regions.json'))
+if regions['regions']
   Region.all.delete
-  data['regions'].each do |region|
-    print region
+  regions['regions'].each do |region|
     Region.new(region).save
   end
 end
 
+lobbies = JSON.parse(IO.read('data/lobbies.json'))
+if lobbies['lobbies']
+  Lobby.all.delete
+  lobbies['lobbies'].each do |lobby|
+    Lobby.new(lobby).save
+  end
+end
+Pqueue.find_or_create_by(account_id: 106866396)

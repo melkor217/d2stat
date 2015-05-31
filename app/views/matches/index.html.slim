@@ -14,7 +14,7 @@ table
       tr
         td = link_to match.match_id, match
         td = match.start_time.strftime("%d.%m.%Y %H:%M:%S")
-        td = match.lobby_type
+        td = match.lobby.name
         td = match.skill
         td = match.human_players
         td = match.region.name

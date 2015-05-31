@@ -23,7 +23,7 @@ class SessionsController < ApplicationController
         logger.error accounts_data
         accounts = accounts_data['response']['players']
         account = Account.add_account(accounts, id32)
-        Pqueue.find_or_create_by(account_id: account['account_id']).save
+        Pqueue.find_or_create_by(account_id: account['account_id'], prio: 10).save
       end
       logger.error 'LOL HA'
       logger.error account

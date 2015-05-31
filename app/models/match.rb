@@ -39,6 +39,7 @@ class Match
   embeds_many :picks_bans
   has_many :players
   belongs_to :region
+  belongs_to :lobby
 
   index({ match_id: 1 }, { unique: true})
   field :_id, type: Integer, default: ->{ match_id }
@@ -71,11 +72,11 @@ class Match
       end
       record = Match.new(details['result'].select do |key|
                            # fields we don't wanna save as is
-                           not %w{players pick_bans cluster start_time}.include? key
+                           not %w{players pick_bans cluster start_time lobby_type}.include? key
                          end)
       record.start_time = DateTime.strptime(details['result']['start_time'].to_s, '%s')
-      Region.find(details['result']['cluster']) # check region existance
       record.region_id = details['result']['cluster']
+      record.lobby_id = details['result']['lobby_type'].to_i
       record.scan_time = Time.now
       if skill
         record.skill = skill

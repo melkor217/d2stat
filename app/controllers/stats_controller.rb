@@ -5,6 +5,7 @@ class StatsController < ApplicationController
     @matches = Match
     @accounts = Account
     @acc = session['account']
+    @pqcount = Pqueue.count
   end
 end
 

@@ -27,6 +27,7 @@ Rails.application.routes.draw do
   #resources :matches, param: :match_id
   resources :matches
   resources :stats
+  get '/accounts/:id/matches', to: 'players#index', as: :matchlist
 
   mount Sidekiq::Web => '/sidekiq', :constraints => AuthConstraint
 

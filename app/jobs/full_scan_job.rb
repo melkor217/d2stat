@@ -32,7 +32,7 @@ class FullScanJob < ActiveJob::Base
           end
         end
       end
-      logger.error "Added #{count} full"
+      logger.info "Added #{count} full"
       if data['result']['matches'].last and (last_num = data['result']['matches'].last['match_seq_num'])
           ScannerStatus.first().update(match_seq_num: data['result']['matches'].last['match_seq_num'])
       end
