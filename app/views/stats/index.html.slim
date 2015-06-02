@@ -10,5 +10,5 @@ p
   br
   | Total accounts added: #{@accounts.count}
   br
-  | Accounts processed: #{@accounts.count - @pqcount}
+  | Accounts processed: #{(100.0*(@accounts.count - @pqcount)/@accounts.count).round(3)}%
 = @qwe
