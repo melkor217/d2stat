@@ -73,4 +73,7 @@ Rails.application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+
+  # limit requests/min for public Steam API
+  config.dota_api_limit = 700
 end

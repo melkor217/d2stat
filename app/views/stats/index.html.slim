@@ -11,4 +11,8 @@ p
   | Total accounts added: #{@accounts.count}
   br
   | Accounts processed: #{(100.0*(@accounts.count - @pqcount)/@accounts.count).round(3)}%
+  br
+  | API requests/min: #{Ratelimit.new(:api_queries).count(:match, 60)}
+  - if session['admin']
+    = console
 = @qwe

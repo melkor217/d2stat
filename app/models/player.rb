@@ -1,6 +1,7 @@
 class Player
   # Player means not account, but "dat pudga in dis gaem"
   include Mongoid::Document
+
   field :account_id, type: BigDecimal
   field :player_slot, type: Integer
   field :hero_id, type: Integer
@@ -41,7 +42,7 @@ class Player
         steam_ids.append(player['account_id'] + 76561197960265728)
       end
     end
-    accounts_data = Dota.api.get('ISteamUser', 'GetPlayerSummaries', 'v002', steamids: steam_ids.join(','))
+    accounts_data = DotaLimited.get('ISteamUser', 'GetPlayerSummaries', 'v002', steamids: steam_ids.join(','))
     if accounts_data and
         accounts_data['response'] and
         accounts_data['response']['players'].count

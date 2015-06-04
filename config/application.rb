@@ -30,6 +30,7 @@ module D2stat
     # config.i18n.default_locale = :de
     config.web_console.whitelisted_ips = '127.0.0.1'
     config.active_job.queue_adapter = :sidekiq
+    config.autoload_paths << Rails.root.join('lib')
     Mongoid.logger.level = Logger::ERROR
     Moped.logger.level = Logger::ERROR
   end

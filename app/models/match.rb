@@ -1,5 +1,6 @@
 class Match
   include Mongoid::Document
+
   field :match_id, type: Integer
   field :match_seq_num, type: Integer
   field :start_time, type: DateTime
@@ -63,7 +64,7 @@ class Match
     end
     logger.debug count
     if Match.where(id: match_id).count == 0
-      details = Dota.api.get('IDOTA2Match_570', 'GetMatchDetails', 'v001', match_id: match_id)
+      details = DotaLimited.get('IDOTA2Match_570', 'GetMatchDetails', 'v001', match_id: match_id)
       if details and details['result']
         details['result']['rev'] = 1
       else

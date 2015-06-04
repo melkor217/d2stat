@@ -9,7 +9,7 @@ class ProcessMatchJob < ActiveJob::Base
     count = Mqueue.count
     if count > 100
       Mqueue.skip(rand(count-30)).limit(20).each do |qmatch|
-        s = Redis::Semaphore.new(qmatch['match_id'])
+        s = Redis::Semaphore.new(qmatch['match_id'], expiration: 600)
         next if s.exists?
         logger.info "/locking #{qmatch['match_id']}"
         s.lock do

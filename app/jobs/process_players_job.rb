@@ -5,10 +5,13 @@ class ProcessPlayersJob < ActiveJob::Base
   queue_as :process_players
 
   def get_json(account_id, start_at_match_id=nil)
-    data = Dota.api.get('IDOTA2Match_570', 'GetMatchHistory', 'v001', account_id: account_id, start_at_match_id: start_at_match_id)
-    if not data.empty? and data['result'] and data['result']['num_results'] > 0
+    data = DotaLimited.get('IDOTA2Match_570', 'GetMatchHistory', 'v001', account_id: account_id, start_at_match_id: start_at_match_id)
+    if not data.empty? and data['result'] and data['result']['num_results'].to_i > 0
       logger.info "start from #{start_at_match_id}"
       count = 0
+      if not data['result']
+        return false
+      end
       data['result']['matches'].each do |match|
         if Match.where(match_id: match['match_id']).count == 0
           count += 1
@@ -20,10 +23,11 @@ class ProcessPlayersJob < ActiveJob::Base
         #Match.add_match match
       end
       logger.info "Added #{count} of #{account_id}"
-      if data['result']['results_remaining'] > 0
+      if data['result']['results_remaining'].to_i > 0
         get_json(account_id, data['result']['matches'].last['match_id'])
       end
     end
+    return true
   end
 
   def perform()
@@ -34,17 +38,21 @@ class ProcessPlayersJob < ActiveJob::Base
     else
       pq = Pqueue
     end
-    if pq.count > 0 and Mqueue.count < 7000
+    while Mqueue.count < 7000
+      if pq.count < 1
+        break
+      end
       pq.limit(5).each do |account|
-        get_json(account['account_id'])
-        account.delete
+        logger.info("Getting info from acc: #{account['account_id']}")
+        if get_json(account['account_id'])
+          account.delete
+        end
       end
-      queue = Sidekiq::Queue.new(:process_players)
-      ([queue.limit.to_i, 10].max - queue.size.to_i).times do
-        self.class.perform_later
-      end
-    else
-      sleep 60
+    end
+    sleep 60
+    queue = Sidekiq::Queue.new(:process_players)
+    ([queue.limit.to_i, 10].max - queue.size.to_i).times do
+      self.class.perform_later
     end
   end
 
