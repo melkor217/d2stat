@@ -1,6 +1,7 @@
 class StatsController < ApplicationController
   def index
-    @mqcount = Mqueue.count
+    @mqcount = Redis.new.scard(:mq)
+    @ac_count = Account.count
     @last_hour_matches = Match.where(:scan_time.gte => (Time.now - 2.hours)).count
     @matches = Match
     @accounts = Account

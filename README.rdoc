@@ -9,13 +9,13 @@ You can get your API key at http://steamcommunity.com/dev/apikey
 Config example:
 
  defaults:
-   key: 0000000000000050D34D104100000000
+   key: 0000050D34D810473DB33F1041000000
 
  development:
-   key: 0000000000000050D34D104100000000
+   key: 000050C0011337000000000000000000
 
  prod:
-   key: 0000000000000050D34D104100000000
+   key: 0000000000000D34DC0DE00000000000
 
 This README would normally document whatever steps are necessary to get the
 application up and running.

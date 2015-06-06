@@ -28,7 +28,7 @@ class FullScanJob < ActiveJob::Base
           count += 1
           s = Redis::Semaphore.new(:add_to_queue)
           s.lock do
-            Mqueue.find_or_create_by(match_id: match['match_id']).save
+            @r.sadd('mq',match['match_id'])
           end
         end
       end
@@ -40,8 +40,9 @@ class FullScanJob < ActiveJob::Base
   end
 
   def perform(*args)
+    @r = Redis.new
     # We perform full scan only if we are out of matches to process
-    if Mqueue.count > 5000
+    if @r.scard('mq') > 50
       sleep 60
     else
       get_json

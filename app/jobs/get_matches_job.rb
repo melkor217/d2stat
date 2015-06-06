@@ -16,7 +16,7 @@ class GetMatchesJob < ActiveJob::Base
           count += 1
           s = Redis::Semaphore.new(:add_to_queue)
           s.lock do
-            Mqueue.find_or_create_by(match_id: match['match_id']).update(skill: skill)
+            @r.sadd('mq', "#{match['match_id']} #{skill}")
           end
         end
         #Match.add_match match
@@ -29,6 +29,7 @@ class GetMatchesJob < ActiveJob::Base
   end
 
   def perform(skill)
+    @r = Redis.new
     # Do something later
       if Redis::Semaphore.new('get_matches_' + skill.to_s, expiration: 10).lock(12)
         # We don't unlock mutex cuz of reasons

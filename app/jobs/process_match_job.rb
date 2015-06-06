@@ -6,21 +6,27 @@ class ProcessMatchJob < ActiveJob::Base
 
   def perform(*args)
     # Do something later
-    count = Mqueue.count
+    r = Redis.new
+    count = r.scard('mq')
     if count > 100
-      Mqueue.skip(rand(count-30)).limit(20).each do |qmatch|
-        s = Redis::Semaphore.new(qmatch['match_id'], expiration: 600)
+      20.times do
+        qmatch, skill = r.spop('mq').to_s.split
+        if qmatch == nil
+          logger.info 'q is empty :('
+          break
+        end
+        s = Redis::Semaphore.new(qmatch, expiration: 600)
         next if s.exists?
-        logger.info "/locking #{qmatch['match_id']}"
+        logger.info "/locking #{qmatch}"
         s.lock do
-          logger.info "processing #{qmatch['match_id']}"
-          if Match.add_match(qmatch['match_id'], qmatch['skill'])
-            qmatch.remove
+          logger.info "processing #{qmatch}"
+          if Match.add_match(qmatch, skill)
+            logger.info "done #{qmatch}"
           else
-            logger.info "will retry later #{qmatch['match_id']}"
+            logger.info "will retry later #{qmatch}"
           end
         end
-        logger.info "/unlocking #{qmatch['match_id']}"
+        logger.info "/unlocking #{qmatch}"
         s.delete!
       end
       queue = Sidekiq::Queue.new(:process_match)

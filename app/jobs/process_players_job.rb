@@ -17,7 +17,7 @@ class ProcessPlayersJob < ActiveJob::Base
           count += 1
           s = Redis::Semaphore.new(:add_to_queue)
           s.lock do
-            Mqueue.find_or_create_by(match_id: match['match_id']).save
+            @r.sadd('mq', match['match_id'])
           end
         end
         #Match.add_match match
@@ -31,6 +31,7 @@ class ProcessPlayersJob < ActiveJob::Base
   end
 
   def perform()
+    @r = Redis.new
     # Do something later
     high_prio = Pqueue.where(:prio.gt => 10)
     if high_prio.count > 0
@@ -38,7 +39,7 @@ class ProcessPlayersJob < ActiveJob::Base
     else
       pq = Pqueue
     end
-    while Mqueue.count < 7000
+    while @r.scard('mq') < 500
       if pq.count < 1
         break
       end
