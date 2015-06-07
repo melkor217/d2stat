@@ -7,7 +7,8 @@ h3 Radiant
 table#match
   thead
     tr
-      th Name
+      th
+      th width='300px' Name
       th Level
       th K
       th D
@@ -15,14 +16,20 @@ table#match
       th Gold
       th LH
       th DN
+      th HD
+      th TD
+      th HH
 
     tbody
       - @match.radiant_players.each do |player|
         tr
-          - if player.account
-            td = link_to player.personaname, player.account
-          - else
-            td Anonymous
+          td
+            img src=player.hero.image
+          td
+            - if player.account
+              = link_to player.personaname, player.account
+            - else
+              | Anonymous
           td = player.level
           td = player.kills
           td = player.deaths
@@ -30,13 +37,17 @@ table#match
           td = player.gold
           td = player.last_hits
           td = player.denies
+          td = player.hero_damage
+          td = player.tower_damage
+          td = player.hero_healing
 
 h3 Dire
 
 table#match
   thead
     tr
-      th Name
+      th
+      th width='300px' Name
       th Level
       th K
       th D
@@ -44,14 +55,20 @@ table#match
       th Gold
       th LH
       th DN
+      th HD
+      th TD
+      th HH
 
     tbody
       - @match.dire_players.each do |player|
         tr
-          - if player.account
-            td = link_to player.personaname, player.account
-          - else
-            td Anonymous
+          td
+            img src=player.hero.image
+          td
+            - if player.account
+              = link_to player.personaname, player.account
+            - else
+              | Anonymous
           td = player.level
           td = player.kills
           td = player.deaths
@@ -59,6 +76,9 @@ table#match
           td = player.gold
           td = player.last_hits
           td = player.denies
+          td = player.hero_damage
+          td = player.tower_damage
+          td = player.hero_healing
 hr
 p
   strong Start time:

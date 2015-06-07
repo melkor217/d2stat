@@ -1,5 +1,5 @@
 class AdditionalUnitsController < ApplicationController
-  before_action :set_additional_unit, only: [:show, :edit, :update, :destroy]
+  before_action :set_additional_unit, only: [:show]
 
   # GET /additional_units
   # GET /additional_units.json
@@ -12,54 +12,6 @@ class AdditionalUnitsController < ApplicationController
   def show
   end
 
-  # GET /additional_units/new
-  def new
-    @additional_unit = AdditionalUnit.new
-  end
-
-  # GET /additional_units/1/edit
-  def edit
-  end
-
-  # POST /additional_units
-  # POST /additional_units.json
-  def create
-    @additional_unit = AdditionalUnit.new(additional_unit_params)
-
-    respond_to do |format|
-      if @additional_unit.save
-        format.html { redirect_to @additional_unit, notice: 'Additional unit was successfully created.' }
-        format.json { render :show, status: :created, location: @additional_unit }
-      else
-        format.html { render :new }
-        format.json { render json: @additional_unit.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # PATCH/PUT /additional_units/1
-  # PATCH/PUT /additional_units/1.json
-  def update
-    respond_to do |format|
-      if @additional_unit.update(additional_unit_params)
-        format.html { redirect_to @additional_unit, notice: 'Additional unit was successfully updated.' }
-        format.json { render :show, status: :ok, location: @additional_unit }
-      else
-        format.html { render :edit }
-        format.json { render json: @additional_unit.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /additional_units/1
-  # DELETE /additional_units/1.json
-  def destroy
-    @additional_unit.destroy
-    respond_to do |format|
-      format.html { redirect_to additional_units_url, notice: 'Additional unit was successfully destroyed.' }
-      format.json { head :no_content }
-    end
-  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

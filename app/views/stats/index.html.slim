@@ -4,9 +4,9 @@ p
   '  |
   = link_to 'Players', accounts_path
 p
-  | Matches queued for processing: #{@mqcount}
+  | Latest matches queued for processing: #{@mqcount_high}
   br
-  | Matches processed for last hour: #{@last_hour_matches}
+  | Other matches queued for processing: #{@mqcount}
   br
   | Total matches processed: #{@matches.count}
   br

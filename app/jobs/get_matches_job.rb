@@ -15,7 +15,7 @@ class GetMatchesJob < ActiveJob::Base
         if Match.where(match_id: match['match_id']).count == 0
           s = Redis::Semaphore.new(:add_to_queue)
           s.lock do
-            if @r.sadd('mq', "#{match['match_id']} #{skill}")
+            if @r.sadd(:mq_high, "#{match['match_id']} #{skill}")
               count += 1
             end
           end

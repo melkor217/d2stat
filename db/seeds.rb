@@ -30,4 +30,12 @@ if modes['modes']
   end
 end
 
+heroes = JSON.parse(IO.read('data/heroes.json'))
+if heroes['heroes']
+  Hero.all.delete
+  heroes['heroes'].each do |hero|
+    Hero.new(hero).save
+  end
+end
+
 Pqueue.find_or_create_by(account_id: 106866396)

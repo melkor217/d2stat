@@ -4,7 +4,6 @@ class Player
 
   field :account_id, type: BigDecimal
   field :player_slot, type: Integer
-  field :hero_id, type: Integer
   field :personaname, type: String
   field :item_0, type: Integer
   field :item_1, type: Integer
@@ -30,6 +29,7 @@ class Player
   embeds_many :ability_upgrades
   embeds_many :additional_units
   belongs_to :match, index: true
+  belongs_to :hero, index: true
   belongs_to :account, index: true
 
   field :_id, type: String, default: ->{ match_id.to_s + '.' + player_slot.to_s }

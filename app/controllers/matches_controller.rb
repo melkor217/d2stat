@@ -4,7 +4,11 @@ class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
   def index
-    @matches = Match.order_by(id: :desc).page(params[:page])
+    @matches = Match.all
+    if params[:lobby].to_s != ''
+      @matches = @matches.where(lobby: params[:lobby])
+    end
+    @matches = @matches.page(params[:page])
     #@matches = Match.where(lobby_id: 7, skill: 3).order_by(match_seq_num: :desc).page(params[:page])
   end
 

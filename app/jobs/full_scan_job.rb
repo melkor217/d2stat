@@ -42,8 +42,8 @@ class FullScanJob < ActiveJob::Base
   def perform(*args)
     @r = Redis.new
     # We perform full scan only if we are out of matches to process
-    if @r.scard('mq') > 50
-      sleep 60
+    if @r.scard('mq') > 500
+      sleep 10
     else
       get_json
     end
