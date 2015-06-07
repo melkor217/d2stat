@@ -19,7 +19,6 @@ class Match
   field :leagueid, type: Integer
   field :positive_votes, type: Integer
   field :negative_votes, type: Integer
-  field :game_mode, type: Integer
   field :radiant_captain, type: Integer
   field :dire_captain, type: Integer
   field :radiant_name, type: String
@@ -41,6 +40,7 @@ class Match
   has_many :players
   belongs_to :region
   belongs_to :lobby
+  belongs_to :mode
 
   index({ match_id: 1 }, { unique: true})
   field :_id, type: Integer, default: ->{ match_id }
@@ -73,11 +73,12 @@ class Match
       end
       record = Match.new(details['result'].select do |key|
                            # fields we don't wanna save as is
-                           not %w{players pick_bans cluster start_time lobby_type}.include? key
+                           not %w{players pick_bans cluster start_time lobby_type game_mode}.include? key
                          end)
       record.start_time = DateTime.strptime(details['result']['start_time'].to_s, '%s')
       record.region_id = details['result']['cluster']
       record.lobby_id = details['result']['lobby_type'].to_i
+      record.mode_id = details['result']['game_mode'].to_i
       record.scan_time = Time.now
       if skill
         record.skill = skill

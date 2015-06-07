@@ -13,10 +13,11 @@ class GetMatchesJob < ActiveJob::Base
       count = 0
       data['result']['matches'].each do |match|
         if Match.where(match_id: match['match_id']).count == 0
-          count += 1
           s = Redis::Semaphore.new(:add_to_queue)
           s.lock do
-            @r.sadd('mq', "#{match['match_id']} #{skill}")
+            if @r.sadd('mq', "#{match['match_id']} #{skill}")
+              count += 1
+            end
           end
         end
         #Match.add_match match

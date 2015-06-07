@@ -21,4 +21,13 @@ if lobbies['lobbies']
     Lobby.new(lobby).save
   end
 end
+
+modes = JSON.parse(IO.read('data/modes.json'))
+if modes['modes']
+  Mode.all.delete
+  modes['modes'].each do |mode|
+    Mode.new(mode).save
+  end
+end
+
 Pqueue.find_or_create_by(account_id: 106866396)

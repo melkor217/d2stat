@@ -6,6 +6,7 @@ table
       th Match
       th Start time
       th Lobby type
+      th Game mode
       th Player slot
       th Hero
 
@@ -16,6 +17,7 @@ table
           = link_to player.match.match_id, player.match
         td = player.match.start_time
         td = player.match.lobby.name
+        td = player.match.mode.name
         td = player.player_slot
         td = player.hero_id
         //td = link_to 'Show', player

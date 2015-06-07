@@ -6,6 +6,7 @@ table
       th Match
       th Start time
       th Lobby type
+      th Game mode
       th Skill bracket
       th Players
       th Region
@@ -15,6 +16,7 @@ table
         td = link_to match.match_id, match
         td = match.start_time.strftime("%d.%m.%Y %H:%M:%S")
         td = match.lobby.name
+        td = match.mode.name
         td = match.skill
         td = match.human_players
         td = match.region.name
