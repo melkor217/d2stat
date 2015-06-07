@@ -54,6 +54,5 @@ gem 'sinatra'
 gem 'redis-semaphore' # some jobs require locks
 gem 'omniauth-steam'
 gem 'dota', :git => 'https://github.com/melkor217/dota.git'
-gem 'devise' # we don't need it
 gem 'ratelimit'
-
+gem 'kaminari' # ez pages

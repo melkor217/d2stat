@@ -7,11 +7,10 @@ table
       th Personaname
 
   tbody
-    - @accounts.limit(30).each do |account|
+    - @accounts.each do |account|
       tr
         td = account.account_id
         td
           = link_to account.personaname, account
-
 br
-
+= paginate @accounts

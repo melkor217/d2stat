@@ -10,6 +10,7 @@ table
       th Skill bracket
       th Players
       th Region
+      th Duration
   tbody
     - @matches.each do |match|
       tr
@@ -20,6 +21,6 @@ table
         td = match.skill
         td = match.human_players
         td = match.region.name
-
+        td #{"%02d:%02d" % [match.duration/60, match.duration%60]}
 br
-
+= paginate @matches

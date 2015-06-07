@@ -17,6 +17,12 @@ Config example:
  prod:
    key: 0000000000000D34DC0DE00000000000
 
+Then you need
+ - to install redis and mongodb
+ - to run `rake db:setup` to create indexes and some seeds
+
+
+
 This README would normally document whatever steps are necessary to get the
 application up and running.
 
