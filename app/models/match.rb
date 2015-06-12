@@ -42,18 +42,20 @@ class Match
   belongs_to :lobby
   belongs_to :mode
 
-  index({ match_id: 1 }, { unique: true})
+  index({ match_id: -1 }, { unique: true})
+  index({ match_seq_num: -1 }, { unique: true})
+  index({ start_time: -1 }, { unique: false})
   field :_id, type: Integer, default: ->{ match_id }
 
   def radiant_players()
     self.players.select do |player|
-      (0..4).include? player.player_slot
+      player.is_radiant?
     end
   end
 
   def dire_players()
     self.players.select do |player|
-      (128..132).include? player.player_slot
+      player.is_dire?
     end
   end
 
@@ -88,13 +90,17 @@ class Match
         record.picks_bans.append pickrecord
       end if details['result']['picks_bans']
       if details['result']['players'].count > 0
-        Player.add_players(details['result']['players'], record)
+        players = Player.add_players(details['result']['players'], record)
       else
         logger.info "no players for match #{match_id}"
         logger.info "json #{details['result']}"
       end
       logger.info('saved %s' % match_id)
-      record.save
+      if record.save and players
+        players.each do |player|
+          player.save
+        end
+      end
     else
       logger.info('skip  %s' % match_id)
     end

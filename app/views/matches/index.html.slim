@@ -1,12 +1,10 @@
 h1 Listing matches
 
-javascript:
-  onload="document.createElement('form').submit.call(document.getElementById('myForm'))"
 
-form action=matches_path method='get' id='myForm'
-  //= select('lobby', 'id', Lobby.all.collect { |p| [p.name, p.id]}, {include_blank: 'al'}, {onchange: 'this.form.submit()'})
-    //select name='lobby' id='lobby' onchange='this.form.submit()'
+form action=matches_path method='get'
   = select_tag(:lobby, options_for_select([['All lobby types', '']] + Lobby.all.collect {|p| [p.name, p.id, selected: (params[:lobby].to_s != '' and p.id==params[:lobby].to_i)]}), onclick: 'this.form.submit()')
+  = select_tag(:mode, options_for_select([['All game modes', '']] + Mode.all.collect {|p| [p.name, p.id, selected: (params[:mode].to_s != '' and p.id==params[:mode].to_i)]}), onclick: 'this.form.submit()')
+
 
 
 table
@@ -32,4 +30,4 @@ table
         td = match.region.name
         td #{"%02d:%02d" % [match.duration/60, match.duration%60]}
 br
-= paginate @matches
+= paginate @matches, total_pages: 50

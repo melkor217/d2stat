@@ -33,7 +33,7 @@ class ProcessPlayersJob < ActiveJob::Base
   def perform()
     @r = Redis.new
     # Do something later
-    high_prio = Pqueue.where(:prio.gt => 10)
+    high_prio = Pqueue.where(:prio.gt => 9)
     if high_prio.count > 0
       pq = high_prio
     else

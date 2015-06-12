@@ -1,5 +1,5 @@
 class AccountsController < ApplicationController
-  before_action :set_account, only: [:show]
+  before_action :set_account, only: [:show, :edit]
 
   # GET /accounts
   # GET /accounts.json
@@ -10,6 +10,11 @@ class AccountsController < ApplicationController
   # GET /accounts/1
   # GET /accounts/1.json
   def show
+  end
+
+  def edit
+    Pqueue.find_or_create_by(account_id: params[:id]).update(prio: 10)
+    render 'accounts/show'
   end
 
   def mathces

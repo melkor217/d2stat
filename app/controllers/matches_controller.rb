@@ -4,9 +4,12 @@ class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
   def index
-    @matches = Match.all
+    @matches = Match.order_by(match_seq_num: :desc)
     if params[:lobby].to_s != ''
       @matches = @matches.where(lobby: params[:lobby])
+    end
+    if params[:mode].to_s != ''
+      @matches = @matches.where(mode: params[:mode])
     end
     @matches = @matches.page(params[:page])
     #@matches = Match.where(lobby_id: 7, skill: 3).order_by(match_seq_num: :desc).page(params[:page])

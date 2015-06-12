@@ -25,14 +25,25 @@ class Player
   field :hero_healing, type: Integer
   field :gold_spent, type: Integer
   field :level, type: Integer
+  field :skill, type: Integer
+
+  field :winner, type: Boolean
 
   embeds_many :ability_upgrades
   embeds_many :additional_units
   belongs_to :match, index: true
-  belongs_to :hero, index: true
+  belongs_to :hero
   belongs_to :account, index: true
 
   field :_id, type: String, default: ->{ match_id.to_s + '.' + player_slot.to_s }
+
+  def is_radiant?
+    return (0..4).include? player_slot
+  end
+
+  def is_dire?
+    return (128..132).include? player_slot
+  end
 
   def self.add_players(players, match)
     # array of 64bit account_ids
@@ -61,6 +72,12 @@ class Player
       # database records for each player
       player['match_id'] = match.id
       record = Player.new(player)
+      record.skill = match.skill
+      if record.is_radiant? == !!match.radiant_win
+        record.winner = true
+      else
+        record.winner = false
+      end
       player['ability_upgrades'].each do |abi_upgrade|
         abirecord = record.ability_upgrades.new(abi_upgrade)
         record.ability_upgrades.append abirecord
@@ -75,8 +92,6 @@ class Player
       Account.add_account(accounts, player['account_id'], record)
       record
     end
-    records.each do |record|
-      record.save
-    end
+    records
   end
 end

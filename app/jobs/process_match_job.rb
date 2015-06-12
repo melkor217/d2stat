@@ -20,7 +20,7 @@ class ProcessMatchJob < ActiveJob::Base
         logger.info 'q is empty :('
         break
       end
-      s = Redis::Semaphore.new(qmatch, expiration: 600)
+      s = Redis::Semaphore.new('match:'+qmatch.to_s, expiration: 600)
       next if s.exists?
       logger.info "/locking #{qmatch} #{rqueue}"
       s.lock do
@@ -32,6 +32,7 @@ class ProcessMatchJob < ActiveJob::Base
         end
       end
       logger.info "/unlocking #{qmatch}"
+      s.unlock
       s.delete!
     end
     queue = Sidekiq::Queue.new(:process_match)

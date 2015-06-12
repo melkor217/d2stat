@@ -24,7 +24,8 @@ table#match
       - @match.radiant_players.each do |player|
         tr
           td
-            img src=player.hero.image
+            - if player.hero
+              img src=player.hero.image
           td
             - if player.account
               = link_to player.personaname, player.account
@@ -63,7 +64,8 @@ table#match
       - @match.dire_players.each do |player|
         tr
           td
-            img src=player.hero.image
+            - if player.hero
+              img src=player.hero.image
           td
             - if player.account
               = link_to player.personaname, player.account
@@ -85,7 +87,7 @@ p
   =< @match.start_time
 p
   strong Lobby type:
-  =< @match.lobby_type
+  =< @match.lobby.name
 p
   strong Region:
   =< @match.region.name

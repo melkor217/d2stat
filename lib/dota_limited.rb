@@ -8,4 +8,9 @@ module DotaLimited
     r.add :match
     Dota.api.get(*args)
   end
+  def self.get_rt(*args)
+    r = Ratelimit.new(:api_queries)
+    r.add :match
+    Dota.api.get(*args)
+  end
 end

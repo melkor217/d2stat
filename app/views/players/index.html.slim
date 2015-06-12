@@ -20,7 +20,8 @@ table
         td = player.match.mode.name
         td = player.player_slot
         td
-          img src=player.hero.image
+          - if player.hero
+            img src=player.hero.image
         //td = link_to 'Show', player
         //td = link_to 'Edit', edit_player_path(player)
         //td = link_to 'Destroy', player, data: {:confirm => 'Are you sure?'}, :method => :delete

@@ -38,6 +38,8 @@ class Account
     end
     if account = matched.first
       account['account_id'] =  account['steamid'].to_i - 76561197960265728
+      s = Redis::Semaphore.new('acc:'+account['account_id'].to_s, expiration: 600)
+      s.lock(10)
       criteria = Account.where(id: account_id)
       if criteria.exists?
         record = criteria.first
@@ -50,9 +52,11 @@ class Account
         player.account = record
       end
       record.save
+      s.unlock
+      s.delete!
       return record
     else
-     return false
+      return false
     end
   end
 end
