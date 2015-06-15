@@ -43,5 +43,6 @@ class SessionsController < ApplicationController
 
   def destroy
     session[:account] = nil
+    session['admin'] = nil
   end
 end

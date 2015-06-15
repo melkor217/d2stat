@@ -1,0 +1,33 @@
+h1 Listing winrates (#{@days.days.ago} - #{(@days-1).days.ago}, ranked only)
+form action=winrates_path method='get'
+  = select_tag(:days, options_for_select((1..9).collect { |p| [p, selected: (p ==  @days)]}), onclick: 'this.form.submit()')
+| days ago
+table
+  thead
+    tr
+      th
+      th Hero
+      th Normal
+      th High
+      th Very High
+      th Unknown
+
+  tbody
+    - query = Winrate.where(:day.gt => @days.days.ago.utc).where(:day.lt => (@days-1).days.ago.utc)
+    - Hero.order_by(localized_name: :asc).each do |hero|
+      tr
+        td
+          img src=hero.image
+        td
+          = hero.localized_name
+        - [1, 2, 3, nil].each do |skill|
+          td
+            - wr = query.where(hero_id: hero.id, skill: skill).first
+            - if wr
+              = (100.0 * wr.wins.to_i / (wr.wins.to_i + wr.loses.to_i)).round(2)
+              | % (
+              = wr.wins.to_i + wr.loses.to_i
+              | )
+
+br
+

@@ -45,6 +45,16 @@ class Player
     return (128..132).include? player_slot
   end
 
+  def item_list
+    return [item_0, item_1, item_2, item_3, item_4, item_5]
+  end
+
+  def items
+    item_list.map do |item|
+      Item.find(item)
+    end
+  end
+
   def self.add_players(players, match)
     # array of 64bit account_ids
     steam_ids = []

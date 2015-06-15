@@ -13,7 +13,7 @@ class ProcessPlayersJob < ActiveJob::Base
         return false
       end
       data['result']['matches'].each do |match|
-        if Match.where(match_id: match['match_id']).count == 0
+        if Match.where(id: match['match_id']).count == 0
           count += 1
           s = Redis::Semaphore.new(:add_to_queue)
           s.lock do

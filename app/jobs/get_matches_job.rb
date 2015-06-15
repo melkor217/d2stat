@@ -9,15 +9,12 @@ class GetMatchesJob < ActiveJob::Base
     data = DotaLimited.get_rt('IDOTA2Match_570', 'GetMatchHistory', 'v001', skill: skill, start_at_match_id: start_at_match_id)
     logger.info 'gotcha'
     if not data.empty? and data['result'] and data['result']['num_results'] > 0
-      logger.info "start from #{start_at_match_id}"
+      logger.info "start from #{start_at_match_id} (#{data['result']['matches'].count})"
       count = 0
       data['result']['matches'].each do |match|
-        if Match.where(match_id: match['match_id']).count == 0
-          s = Redis::Semaphore.new(:add_to_queue)
-          s.lock do
-            if @r.sadd(:mq_high, "#{match['match_id']} #{skill}")
-              count += 1
-            end
+        if Match.where(id: match['match_id']).count == 0
+          if @r.sadd(:mq_high, "#{match['match_id']} #{skill}")
+            count += 1
           end
         end
         #Match.add_match match

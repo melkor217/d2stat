@@ -3,6 +3,11 @@ p
   = link_to 'Last matches', @matches
   '  |
   = link_to 'Players', accounts_path
+  '  |
+  = link_to 'Win Rate by hero', winrates_path
+  - if session['admin']
+    '  |
+    = link_to 'Workers', '/sidekiq'
 p
   | Latest matches queued for processing: #{@mqcount_high}
   br

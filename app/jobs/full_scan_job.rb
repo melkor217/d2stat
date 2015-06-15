@@ -24,12 +24,9 @@ class FullScanJob < ActiveJob::Base
     if data and data['result'] and data['result']['matches'].count
       count = 0
       data['result']['matches'].each do |match|
-        if Match.where(match_id: match['match_id']).count == 0
+        if Match.where(id: match['match_id']).count == 0
           count += 1
-          s = Redis::Semaphore.new(:add_to_queue)
-          s.lock do
-            @r.sadd('mq',match['match_id'])
-          end
+          @r.sadd('mq',match['match_id'])
         end
       end
       logger.info "Added #{count} full"

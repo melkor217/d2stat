@@ -28,7 +28,8 @@ class Account
   has_many :players
   has_many :authorizations
 
-  index({ account_id: 1 }, { unique: true})
+  index({ personaname: 1 }, { unique: false})
+  #index({ account_id: 1 }, { unique: true})
   field :_id, type: Integer, default: ->{ account_id }
 
   def self.add_account(accounts, account_id, player=nil)

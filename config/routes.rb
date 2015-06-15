@@ -13,6 +13,7 @@ Rails.application.routes.draw do
 
 
 
+  resources :winrates
   post '/auth/:provider/callback', :to => 'sessions#create'
   get '/signout', :to => 'sessions#destroy', :as => :logout
   #post '/auth/failure', :to => 'sessions#failure'

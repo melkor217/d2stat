@@ -42,7 +42,7 @@ class Match
   belongs_to :lobby
   belongs_to :mode
 
-  index({ match_id: -1 }, { unique: true})
+  #index({ match_id: -1 }, { unique: true})
   index({ match_seq_num: -1 }, { unique: true})
   index({ start_time: -1 }, { unique: false})
   field :_id, type: Integer, default: ->{ match_id }
@@ -57,6 +57,14 @@ class Match
     self.players.select do |player|
       player.is_dire?
     end
+  end
+
+  def actual_players()
+    radiant_players + dire_players
+  end
+
+  def start_day()
+    Time.at(start_time.to_i - start_time.to_i.divmod(1.days.to_i).last)
   end
 
   def self.add_match(match_id, skill=nil)
@@ -100,6 +108,7 @@ class Match
         players.each do |player|
           player.save
         end
+        StatProcessor.perform(record, players)
       end
     else
       logger.info('skip  %s' % match_id)

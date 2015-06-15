@@ -6,7 +6,8 @@
         },
         {
             "id" : 0,
-            "name" : "Public matchmaking"
+            "name" : "Public matchmaking",
+            "active": true
         },
         {
             "id" : 1,
@@ -22,7 +23,8 @@
         },
         {
             "id" : 4,
-            "name" : "Co-op with bots"
+            "name" : "Co-op with bots",
+            "active": true
         },
         {
             "id" : 5,
@@ -34,11 +36,13 @@
         },
         {
             "id" : 7,
-            "name" : "Ranked"
+            "name" : "Ranked",
+            "active": true
         },
         {
             "id" : 8,
-            "name" : "Solo Mid 1vs1"
+            "name" : "Solo Mid 1vs1",
+            "active": true
         }
     ]
 }

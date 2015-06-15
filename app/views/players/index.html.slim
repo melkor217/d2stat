@@ -7,6 +7,7 @@ table
       th Start time
       th Lobby type
       th Game mode
+      th Skill
       th Player slot
       th Hero
 
@@ -18,6 +19,7 @@ table
         td = player.match.start_time
         td = player.match.lobby.name
         td = player.match.mode.name
+        td = player.skill
         td = player.player_slot
         td
           - if player.hero

@@ -6,23 +6,28 @@
         },
         {
             "id" : 1,
-            "name" : "All Pick"
+            "name" : "All Pick",
+            "active": true
         },
         {
             "id" : 2,
-            "name" : "Captains Mode"
+            "name" : "Captains Mode",
+            "active": true
         },
         {
             "id" : 3,
-            "name" : "Random Draft"
+            "name" : "Random Draft",
+            "active": true
         },
         {
             "id" : 4,
-            "name" : "Single Draft"
+            "name" : "Single Draft",
+            "active": true
         },
         {
             "id" : 5,
-            "name" : "All Random"
+            "name" : "All Random",
+            "active": true
         },
         {
             "id" : 6,
@@ -54,7 +59,8 @@
         },
         {
             "id" : 13,
-            "name" : "New Player Pool"
+            "name" : "New Player Pool",
+            "active": true
         },
         {
             "id" : 14,
@@ -66,7 +72,8 @@
         },
         {
             "id": 16,
-            "name": "Captains Draft"
+            "name": "Captains Draft",
+            "active": true
         },
         {
             "id": 17,
@@ -74,7 +81,8 @@
         },
         {
             "id": 18,
-            "name": "Ability Draft"
+            "name": "Ability Draft",
+            "active": true
         },
         {
             "id": 19,
@@ -82,15 +90,18 @@
         },
         {
             "id": 20,
-            "name": "All Random Death Match"
+            "name": "All Random Death Match",
+            "active": true
         },
         {
             "id": 21,
-            "name": "1vs1 Solo Mid"
+            "name": "1vs1 Solo Mid",
+            "active": true
         },
         {
             "id": 22,
-            "name": "Ranked All Pick"
+            "name": "Ranked All Pick",
+            "active": true
         }
     ]
 }

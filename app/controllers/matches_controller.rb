@@ -5,10 +5,10 @@ class MatchesController < ApplicationController
   # GET /matches.json
   def index
     @matches = Match.order_by(match_seq_num: :desc)
-    if params[:lobby].to_s != ''
+    if params[:lobby].to_s != '' and Lobby.find(params[:lobby]).active == true
       @matches = @matches.where(lobby: params[:lobby])
     end
-    if params[:mode].to_s != ''
+    if params[:mode].to_s != '' and Mode.find(params[:mode]).active == true
       @matches = @matches.where(mode: params[:mode])
     end
     @matches = @matches.page(params[:page])
