@@ -74,7 +74,7 @@ class Match
     end
     logger.debug count
     if Match.where(id: match_id).count == 0
-      details = DotaLimited.get('IDOTA2Match_570', 'GetMatchDetails', 'v001', match_id: match_id)
+      details = DotaLimited.get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id, api_version: 'v1')
       if details and details['result']
         details['result']['rev'] = 1
       else

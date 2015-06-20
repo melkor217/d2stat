@@ -6,7 +6,7 @@ class GetMatchesJob < ActiveJob::Base
 
   def get_json(skill, start_at_match_id=nil)
     logger.info 'getting data'
-    data = DotaLimited.get_rt('IDOTA2Match_570', 'GetMatchHistory', 'v001', skill: skill, start_at_match_id: start_at_match_id)
+    data = DotaLimited.get_rt('IDOTA2Match_570', 'GetMatchHistory', skill: skill, start_at_match_id: start_at_match_id, api_version: 'v1')
     logger.info 'gotcha'
     if not data.empty? and data['result'] and data['result']['num_results'] > 0
       logger.info "start from #{start_at_match_id} (#{data['result']['matches'].count})"
