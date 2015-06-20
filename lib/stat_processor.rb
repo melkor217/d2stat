@@ -15,5 +15,6 @@ module StatProcessor
         record.save
       end
     end
+    return true
   end
 end
