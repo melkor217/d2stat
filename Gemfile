@@ -57,3 +57,4 @@ gem 'dota', :git => 'https://github.com/melkor217/dota.git'
 gem 'ratelimit'
 gem 'kaminari' # ez pages
 gem 'mongoid_rails_migrations'
+gem 'unicorn-rails'
