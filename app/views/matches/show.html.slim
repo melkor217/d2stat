@@ -2,6 +2,13 @@ p#notice = notice
 
 h1 Match #{@match.id}
 
+h1
+  - if @match.radiant_win
+    | Radiant victory
+  - else
+    | Dire victory
+
+
 h3 Radiant
 
 table#match
@@ -9,6 +16,7 @@ table#match
     tr
       th
       th width='300px' Name
+      th Items
       th Level
       th K
       th D
@@ -31,6 +39,9 @@ table#match
               = link_to player.personaname, player.account
             - else
               | Anonymous
+          td
+            - player.item_list.each do |item|
+              img src=Item.find(item).image style='width: 43px; height: 32px;'
           td = player.level
           td = player.kills
           td = player.deaths
@@ -49,6 +60,7 @@ table#match
     tr
       th
       th width='300px' Name
+      th Items
       th Level
       th K
       th D
@@ -71,6 +83,9 @@ table#match
               = link_to player.personaname, player.account
             - else
               | Anonymous
+          td
+            - player.item_list.each do |item|
+              img src=Item.find(item).image style='width: 43px; height: 32px;'
           td = player.level
           td = player.kills
           td = player.deaths
@@ -91,4 +106,6 @@ p
 p
   strong Region:
   =< @match.region.name
-
+p
+  strong Patch:
+  =< @match.patch.version

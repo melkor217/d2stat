@@ -20,6 +20,4 @@ p
   | Accounts processed: #{(100.0*(@ac_count - @pqcount)/@ac_count).round(3)}%
   br
   | API requests/10min: #{Ratelimit.new(:api_queries).count(:match, 600)}
-  - if session['admin']
-    = console
 = @qwe

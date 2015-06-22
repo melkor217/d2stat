@@ -5,7 +5,7 @@ class ProcessPlayersJob < ActiveJob::Base
   queue_as :process_players
 
   def get_json(account_id, start_at_match_id=nil)
-    data = DotaLimited.get('IDOTA2Match_570', 'GetMatchHistory', account_id: account_id, start_at_match_id: start_at_match_id, api_version: 'v1')
+    data = DotaLimited::get('IDOTA2Match_570', 'GetMatchHistory', account_id: account_id, start_at_match_id: start_at_match_id, api_version: 'v1')
     if not data.empty? and data['result'] and data['result']['num_results'].to_i > 0
       logger.info "start from #{start_at_match_id}"
       count = 0

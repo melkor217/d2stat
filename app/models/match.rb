@@ -67,6 +67,10 @@ class Match
     Time.at(start_time.to_i - start_time.to_i.divmod(1.days.to_i).last)
   end
 
+  def patch
+    Patch.where(:date.lt => start_time).last
+  end
+
   def self.add_match(match_id, skill=nil)
     count = Match.where(id: match_id).count
     if count > 1
@@ -74,7 +78,7 @@ class Match
     end
     logger.debug count
     if Match.where(id: match_id).count == 0
-      details = DotaLimited.get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id, api_version: 'v1')
+      details = DotaLimited::get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id, api_version: 'v1')
       if details and details['result']
         details['result']['rev'] = 1
       else
@@ -108,7 +112,7 @@ class Match
         players.each do |player|
           player.save
         end
-        StatProcessor.perform(record, players)
+        StatProcessor::perform(record, players)
       end
     else
       logger.info('skip  %s' % match_id)

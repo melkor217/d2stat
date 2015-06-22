@@ -4,7 +4,7 @@ class WinratesController < ApplicationController
   # GET /winrates.json
   def index
     @days = 1
-    if (1..9).include? params[:days].to_i
+    if (1..9999).include? params[:days].to_i
       @days = params[:days].to_i
     end
   end

@@ -10,7 +10,7 @@ class PlayersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_players
-      @players = Player.where(account_id: params[:id]).order_by(match_id: :desc).page(params[:page])
+      @players = Player.where(account_id: params[:id]).order_by(match_id: :desc).page(params[:page]).per(20)
     end
 
     # Never trust parameters from the scary internet, only allow the white list through.

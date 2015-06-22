@@ -46,4 +46,13 @@ if items['items']
   end
 end
 
+patches = JSON.parse(IO.read('data/patches.json'))
+if patches['patches']
+  Patch.all.delete
+  patches['patches'].each do |patch|
+    patch['date'] = Time.parse(patch['date'])
+    Patch.new(patch).save
+  end
+end
+
 Pqueue.find_or_create_by(account_id: 106866396)

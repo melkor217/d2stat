@@ -72,7 +72,18 @@ Rails.application.configure do
   config.active_support.deprecation = :notify
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
-  config.log_formatter = ::Logger::Formatter.new
+  #config.log_formatter = ::Logger::Formatter.new
+
+  # Raises error for missing translations
+  # config.action_view.raise_on_missing_translations = true
+  logger = Logger.new(File.join( Rails.root, "log", "#{ Rails.env}.log"), 'daily')
+  logger.level = Logger::INFO
+  logger.formatter = proc do |severity, datetime, progname, msg|
+    "#{datetime.strftime("%B %d %H:%M:%S")} #{Socket.gethostname}, [#{$$}]:, #{severity}  d2stat, #{msg}\n"
+  end
+
+  tag_log = ActiveSupport::TaggedLogging.new(logger)
+  config.logger = tag_log
 
   # limit requests/min for public Steam API
   config.dota_api_limit = 7000

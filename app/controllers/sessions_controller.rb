@@ -19,7 +19,7 @@ class SessionsController < ApplicationController
       if accounts.count > 0
         account = accounts.first
       else
-        accounts_data = Dota.api.get('ISteamUser', 'GetPlayerSummaries', 'v002', steamids: id64.to_s)
+        accounts_data = Dota.api.get('ISteamUser', 'GetPlayerSummaries', steamids: id64.to_s, api_version: 'v2')
         logger.error accounts_data
         accounts = accounts_data['response']['players']
         account = Account.add_account(accounts, id32)

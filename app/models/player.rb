@@ -63,7 +63,7 @@ class Player
         steam_ids.append(player['account_id'] + 76561197960265728)
       end
     end
-    accounts_data = DotaLimited.get('ISteamUser', 'GetPlayerSummaries', steamids: steam_ids.join(','), api_version: 'v2')
+    accounts_data = DotaLimited::get('ISteamUser', 'GetPlayerSummaries', steamids: steam_ids.join(','), api_version: 'v2')
     if accounts_data and
         accounts_data['response'] and
         accounts_data['response']['players'].count
