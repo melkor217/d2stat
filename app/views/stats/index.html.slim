@@ -17,7 +17,7 @@ p
   br
   | Total accounts added: #{@ac_count}
   br
-  | Accounts processed: #{(100.0*(@ac_count - @pqcount)/@ac_count).round(3)}%
+  | Accounts processed: #{(100.0*(@ac_count - @pqcount)/@ac_count).round(3)}% (#{@ac_count - @pqcount})
   br
   | API requests/10min: #{Ratelimit.new(:api_queries).count(:match, 600)}
 = @qwe

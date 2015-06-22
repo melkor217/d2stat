@@ -13,6 +13,7 @@ class ProcessMatchJob < ActiveJob::Base
     end
     20.times do
       if r.scard(rqueue) < 25
+        sleep 10
         break
       end
       qmatch, skill = r.spop(rqueue).to_s.split
