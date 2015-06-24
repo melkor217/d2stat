@@ -4,12 +4,18 @@ class MatchesController < ApplicationController
   # GET /matches
   # GET /matches.json
   def index
+    @skills = [['All skill brackets', ''], ['Unknown', '0'], ['Normal', '1'], ['High', '2'], ['Very High', '3']]
     @matches = Match.all
     if params[:lobby].to_s != '' and Lobby.find(params[:lobby]).active == true
       @matches = @matches.where(lobby: params[:lobby])
     end
     if params[:mode].to_s != '' and Mode.find(params[:mode]).active == true
       @matches = @matches.where(mode: params[:mode])
+    end
+    if params[:skill].to_s != '' and (0..3).include? params[:skill].to_i
+      skill = params[:skill].to_i
+      skill = nil if skill.to_i==0
+      @matches = @matches.where(skill: skill)
     end
     @matches = @matches.order_by(match_seq_num: :desc)
     @matches = @matches.page(params[:page])
