@@ -20,7 +20,7 @@ class FullScanJob < ActiveJob::Base
       start_at_seq_num = VERY_FIRST_MATCH
       logger.warn 'NO SEQ NUMBER'
     end
-    data = DotaLimited::get('IDOTA2Match_570', 'GetMatchHistoryBySequenceNum', start_at_match_seq_num: 240, api_version: 'v1')
+    data = DotaLimited::get('IDOTA2Match_570', 'GetMatchHistoryBySequenceNum', start_at_match_seq_num: start_at_seq_num, api_version: 'v1')
     if data and data['result'] and data['result']['matches'].count
       count = 0
       data['result']['matches'].each do |match|
@@ -31,7 +31,7 @@ class FullScanJob < ActiveJob::Base
       end
       logger.info "Added #{count} full"
       if data['result']['matches'].last and (last_num = data['result']['matches'].last['match_seq_num'])
-          ScannerStatus.first().update(match_seq_num: data['result']['matches'].last['match_seq_num'])
+          ScannerStatus.first().update(match_seq_num: data['result']['matches'].last['match_seq_num'], start_time: DateTime.strptime(data['result']['matches'].last['start_time'].to_s, '%s'))
       end
     end
   end
@@ -39,7 +39,8 @@ class FullScanJob < ActiveJob::Base
   def perform(*args)
     @r = Redis.new
     # We perform full scan only if we are out of matches to process
-    if @r.scard('mq') > 500
+    if @r.scard('mq') > 3000
+      logger.info('sleep')
       sleep 10
     else
       get_json

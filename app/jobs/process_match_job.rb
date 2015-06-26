@@ -23,7 +23,7 @@ class ProcessMatchJob < ActiveJob::Base
       end
       s = Redis::Semaphore.new('match:'+qmatch.to_s, expiration: 600)
       next if s.exists?
-      logger.info "/locking #{qmatch} #{rqueue}"
+      logger.info "/locking #{qmatch} (#{skill}) #{rqueue}"
       s.lock do
         logger.info "processing #{qmatch}"
         if Match.add_match(qmatch, skill)

@@ -39,8 +39,10 @@ class ProcessPlayersJob < ActiveJob::Base
     else
       pq = Pqueue
     end
+    sleep 2
     30.times do
-      if pq.count < 1 or @r.scard('mq') > 500
+      if pq.count < 1 or @r.scard('mq') > 3000
+        sleep 10
         break
       end
       pq.limit(5).each do |account|
@@ -50,7 +52,6 @@ class ProcessPlayersJob < ActiveJob::Base
         end
       end
     end
-    sleep 10
     queue = Sidekiq::Queue.new(:process_players)
     ([queue.limit.to_i, 10].max - queue.size.to_i).times do
       self.class.perform_later
