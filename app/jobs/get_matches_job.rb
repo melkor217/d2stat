@@ -14,6 +14,7 @@ class GetMatchesJob < ActiveJob::Base
       data['result']['matches'].each do |match|
         if Match.where(id: match['match_id']).count == 0
           if @r.sadd(:mq_high, "#{match['match_id']} #{skill}")
+            @r.srem(:mq, match['match_id'])
             count += 1
           end
         end

@@ -72,10 +72,7 @@ class Match
   end
 
   def self.add_match(match_id, skill=nil)
-    count = Match.where(id: match_id).count
-    if count > 1
-      logger.fatal 'ERROR COUNT %i %i' % [count, match_id]
-    end
+    existing_record = Match.where(id: match_id)
     logger.debug count
     if Match.where(id: match_id).count == 0
       details = DotaLimited::get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id, api_version: 'v1')
@@ -85,18 +82,32 @@ class Match
         Rails.logger.error "No details #{match_id}"
         return false
       end
-      record = Match.new(details['result'].select do |key|
-                           # fields we don't wanna save as is
-                           not %w{players pick_bans cluster start_time lobby_type game_mode}.include? key
-                         end)
+
+      filtered_defails = details['result'].select do |key|
+         # fields we don't wanna save as is
+         not %w{players pick_bans cluster start_time lobby_type game_mode}.include? key
+      end
+
+      if skill
+        if existing_record.exists?
+          record = existing_record
+        else
+          record = Match.new(filtered_defails)
+        end
+        record.skill = skill
+      else
+        if existing_record.exists?
+          logger.fatal 'ERROR COUNT %i %i' % [count, match_id]
+          return
+        end
+        record = Match.new(filtered_defails)
+      end
+
       record.start_time = DateTime.strptime(details['result']['start_time'].to_s, '%s')
       record.region_id = details['result']['cluster']
       record.lobby_id = details['result']['lobby_type'].to_i
       record.mode_id = details['result']['game_mode'].to_i
       record.scan_time = Time.now
-      if skill
-        record.skill = skill
-      end
       details['result']['picks_bans'].each do |picks_ban|
         pickrecord = PicksBan.new(picks_ban)
         record.picks_bans.append pickrecord

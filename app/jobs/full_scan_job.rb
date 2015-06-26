@@ -26,7 +26,11 @@ class FullScanJob < ActiveJob::Base
       data['result']['matches'].each do |match|
         if Match.where(id: match['match_id']).count == 0
           count += 1
-          @r.sadd('mq',match['match_id'])
+          if not @r.sismember(:mq_high, "#{match['match_id']} 1") and
+              not @r.sismember(:mq_high, "#{match['match_id']} 2") and
+              not @r.sismember(:mq_high, "#{match['match_id']} 3")
+            @r.sadd(:mq, match['match_id'])
+          end
         end
       end
       logger.info "Added #{count} full"

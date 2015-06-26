@@ -56,6 +56,7 @@ class Player
   end
 
   def self.add_players(players, match)
+    Player.where(match_id: match.id).delete
     # array of 64bit account_ids
     steam_ids = []
     players.each do |player|
