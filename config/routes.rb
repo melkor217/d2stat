@@ -1,6 +1,8 @@
 require 'sidekiq/web'
 
 class AuthConstraint
+  # requires admin for viewing some stuff
+  # currently used by sidekiq
   def self.matches?(request)
     request.session[:init] = true # Starts up the session so we can access values from it later.
     request.session['admin']
@@ -17,12 +19,6 @@ Rails.application.routes.draw do
   post '/auth/:provider/callback', :to => 'sessions#create'
   get '/signout', :to => 'sessions#destroy', :as => :logout
   #post '/auth/failure', :to => 'sessions#failure'
-  resources :mqueues
-  resources :scanner_statuses
-  resources :picks_bans
-  resources :additional_units
-  resources :ability_upgrades
-  resources :keys
   resources :accounts
   resources :players
   #resources :matches, param: :match_id
