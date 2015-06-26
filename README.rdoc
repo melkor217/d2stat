@@ -22,6 +22,13 @@ Then you need
  - to run `rake db:setup` to create indexes and some seeds
 
 
+Start web-server:
+
+ rails server unicorn
+
+Start workers:
+
+ bundle exec sidekiq
 
 This README would normally document whatever steps are necessary to get the
 application up and running.
