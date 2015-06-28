@@ -5,6 +5,8 @@ p
   = link_to 'Players', accounts_path
   '  |
   = link_to 'Win Rate by hero', winrates_path
+  '  |
+  = link_to 'Avg stats by skill bracket', avgstats_path
   - if session['admin']
     '  |
     = link_to 'Workers', '/sidekiq'

@@ -1,0 +1,45 @@
+h1 Listing avgstats (#{@days.days.ago} - #{(@days-1).days.ago}, ranked allpick only)
+
+form action=avgstats_path method='get'
+  = select_tag(:days, options_for_select((1..9).collect { |p| ["#{p} days ago", p, selected: (p ==  @days)]}), onchange: 'this.form.submit()')
+  = select_tag(:mode, options_for_select(Mode.where(active:true).collect {|p| [p.name, p.id, selected: (params[:mode].to_s != '' and p.id==params[:mode].to_i)]}), onchange: 'this.form.submit()')
+
+table
+  thead
+    tr
+      th Duration
+      th Normal
+      th High
+      th Very High
+      th Unknown
+  tbody
+    - (2..15).each do |duration|
+      tr
+        td = "#{(duration)*5}-#{(duration+1)*5} min"
+        - [1,2,3,nil].each do |skill|
+          - q = @query.where(skill: skill, duration: duration).first
+          td
+            - if q and q.matchcount > 0
+              | Count:
+              '
+              = q.matchcount
+              hr
+              | LH:
+              '
+              = q.lasthits / 10 / q.matchcount
+              hr
+              | DN:
+              '
+              = (q.denies.to_f / 10 / q.matchcount).round(2)
+              hr
+              | LHPM:
+              '
+              = (q.lasthits.to_f / 10 / (q.totalduration/60)).round(2)
+              hr
+              | GPM:
+              '
+              = q.gpm / 10 / q.matchcount
+              hr
+              | XPM:
+              '
+              = q.xpm / 10 / q.matchcount
