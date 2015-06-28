@@ -12,6 +12,7 @@ def enqueue_all()
   GetMatchesJob.set(queue: :scan_low).perform_later 1
   GetMatchesJob.set(queue: :scan_high).perform_later 2
   GetMatchesJob.set(queue: :scan_very_high).perform_later 3
+  LatestMatchesJob.perform_later
   FullScanJob.perform_later
   ProcessMatchJob.perform_later
   ProcessPlayersJob.perform_later

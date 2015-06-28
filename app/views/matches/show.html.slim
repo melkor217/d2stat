@@ -1,7 +1,5 @@
 p#notice = notice
 
-h1 Match #{@match.id}
-
 h1
   - if @match.radiant_win
     | Radiant victory
@@ -110,5 +108,31 @@ p
   strong Patch:
   =< @match.patch.version
 p
+  strong Duration:
+  =< "%02d:%02d" % [@match.duration/60, @match.duration%60]
+p
   strong Skill bracket:
   =< @match.skill
+hr
+b Avg match stats:
+br
+| LH:
+'
+= ((@match.actual_players.map { |player| player.last_hits }.sum.to_f)/@match.actual_players.count).round(2)
+br
+| DN:
+'
+= ((@match.actual_players.map { |player| player.denies }.sum.to_f)/@match.actual_players.count).round(2)
+br
+| LHPM:
+'
+= ((@match.actual_players.map { |player| player.last_hits }.sum.to_f)/@match.actual_players.count/(@match.duration/60)).round(2)
+br
+| GPM:
+'
+= (@match.actual_players.map { |player| player.gold_per_min }.sum)/@match.actual_players.count
+br
+| XPM:
+'
+= (@match.actual_players.map { |player| player.xp_per_min }.sum)/@match.actual_players.count
+br

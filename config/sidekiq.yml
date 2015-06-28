@@ -5,6 +5,7 @@
   - scan_high
   - scan_very_high
   - full_scan
+  - latest_scan
   - process_match
   - process_players
 :limits:
@@ -12,5 +13,6 @@
   scan_high: 1
   scan_very_high: 1
   full_scan: 1
-  process_match: 45
+  latest_scan: 1
+  process_match: 64
   process_players: 1

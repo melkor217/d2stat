@@ -75,7 +75,13 @@ class Match
     existing_record = Match.where(id: match_id)
     logger.debug count
     if Match.where(id: match_id).count == 0
-      details = DotaLimited::get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id, api_version: 'v1')
+      begin
+        details = DotaLimited::get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id, api_version: 'v1')
+      rescue Exception => e
+        logger.info "unable to get data (#{e.class})"
+        sleep 5
+        return 0
+      end
       if details and details['result']
         details['result']['rev'] = 1
       else

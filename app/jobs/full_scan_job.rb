@@ -10,13 +10,13 @@ class FullScanJob < ActiveJob::Base
 
   def get_json()
     # Scan sequentially from the first
-    entry = ScannerStatus.first()
+    entry = ScannerStatus.where(name: 'full').first()
     if entry
       start_at_seq_num = entry.match_seq_num
     end
     if not start_at_seq_num
 
-      ScannerStatus.new(match_seq_num: VERY_FIRST_MATCH).save
+      ScannerStatus.new(match_seq_num: VERY_FIRST_MATCH, name: 'full').save
       start_at_seq_num = VERY_FIRST_MATCH
       logger.warn 'NO SEQ NUMBER'
     end
@@ -35,7 +35,7 @@ class FullScanJob < ActiveJob::Base
       end
       logger.info "Added #{count} full"
       if data['result']['matches'].last and (last_num = data['result']['matches'].last['match_seq_num'])
-          ScannerStatus.first().update(match_seq_num: data['result']['matches'].last['match_seq_num'], start_time: DateTime.strptime(data['result']['matches'].last['start_time'].to_s, '%s'))
+          ScannerStatus.where(name: 'full').first().update(match_seq_num: data['result']['matches'].last['match_seq_num'], start_time: DateTime.strptime(data['result']['matches'].last['start_time'].to_s, '%s'))
       end
     end
   end
