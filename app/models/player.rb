@@ -75,31 +75,29 @@ class Player
     logger.info "#{accounts.size} accounts"
     records = players.map do |player|
       matched_accs = accounts.select do |account|
-        player['account_id'].to_i == (-76561197960265728 + account['steamid'].to_i)
+        player['account_id'].to_i == (account['steamid'].to_i - 76561197960265728)
       end
-      if matched_accs.first
+      if not matched_accs.empty?
         player['personaname'] = matched_accs.first['personaname']
       end
       # database records for each player
       player['match_id'] = match.id
+      player['skill'] = match.skill
       record = Player.new(player)
-      record.skill = match.skill
       if record.is_radiant? == !!match.radiant_win
         record.winner = true
       else
         record.winner = false
       end
-      player['ability_upgrades'].each do |abi_upgrade|
+      player['ability_upgrades'].map! do |abi_upgrade|
         abirecord = record.ability_upgrades.new(abi_upgrade)
-        record.ability_upgrades.append abirecord
       end if player['ability_upgrades']
-      player['additional_units'].each do |additional_unit|
+      player['additional_units'].map! do |additional_unit|
         unitrecord = record.additional_units.new(additional_unit)
-        record.additional_units.append unitrecord
       end if player['additional_units']
       #match.players.push player
       #record.match = match
-      record.update(player.select { |key| key != 'ability_upgrades' and key != 'additional_units' })
+      record.update(player)
       Account.add_account(accounts, player['account_id'], record)
       record
     end

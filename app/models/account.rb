@@ -38,17 +38,17 @@ class Account
       account['steamid'].to_i == (account_id.to_i + 76561197960265728)
     end
     if account = matched.first
+      account['last_check'] = Time.now
       account['account_id'] =  account['steamid'].to_i - 76561197960265728
       s = Redis::Semaphore.new('acc:'+account['account_id'].to_s, expiration: 600, redis: RedisSession)
       s.lock(10)
       criteria = Account.where(id: account_id)
       if criteria.exists?
-        record = criteria.first
+        return true
       else
         record = Account.new(account)
-        Pqueue.find_or_create_by(account_id: account['account_id'])
+        Pqueue.find_or_create_by(id: account['account_id'])
       end
-      record.last_check = Time.now
       if player
         player.account = record
       end

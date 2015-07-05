@@ -81,14 +81,12 @@ class Match
       sleep 5
       return 0
     end
-    if details and details['result']
-      details['result']['rev'] = 1
-    else
+    if not details or not (result = details['result'])
       logger.info "No details #{match_id}"
       return 0
     end
 
-    filtered_details = details['result'].select do |key|
+    filtered_details = result.select do |key|
        # fields we don't wanna save as is
        not %w{players pick_bans cluster start_time lobby_type game_mode}.include? key
     end
@@ -108,20 +106,21 @@ class Match
       record = Match.new(filtered_details)
     end
 
-    record.start_time = DateTime.strptime(details['result']['start_time'].to_s, '%s')
-    record.region_id = details['result']['cluster']
-    record.lobby_id = details['result']['lobby_type'].to_i
-    record.mode_id = details['result']['game_mode'].to_i
+    record.start_time = DateTime.strptime(result['start_time'].to_s, '%s')
+    record.region_id = result['cluster']
+    record.lobby_id = result['lobby_type'].to_i
+    record.mode_id = result['game_mode'].to_i
     record.scan_time = Time.now
-    details['result']['picks_bans'].each do |picks_ban|
+    record.rev = 1
+    result['picks_bans'].each do |picks_ban|
       pickrecord = PicksBan.new(picks_ban)
       record.picks_bans.append pickrecord
-    end if details['result']['picks_bans']
-    if details['result']['players'].count > 0
-      players = Player.add_players(details['result']['players'], record)
+    end if result['picks_bans']
+    if result['players'].count > 0
+      players = Player.add_players(result['players'], record)
     else
       logger.info "no players for match #{match_id}"
-      logger.info "json #{details['result']}"
+      logger.info "json #{result}"
     end
     logger.info('saved %s' % match_id)
     if record.save and players

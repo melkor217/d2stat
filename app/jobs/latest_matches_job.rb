@@ -25,8 +25,8 @@ class LatestMatchesJob < ActiveJob::Base
     begin
       data = DotaLimited::get2('IDOTA2Match_570', 'GetMatchHistoryBySequenceNum', start_at_match_seq_num: start_at_seq_num, api_version: 'v01')
     rescue Exception => e
-      logger.info "latest scan threshold (#{e.class}), sleep 4"
-      sleep 4
+      logger.info "latest scan threshold (#{e.class}), sleep 3"
+      sleep 3
       return
     end
 
@@ -62,7 +62,7 @@ class LatestMatchesJob < ActiveJob::Base
       10.times do
         t = Time.now
         get_json
-        sleep [t+6.6 - Time.now, 0.1].max
+        sleep [t+3.6 - Time.now, 0.1].max
       end
     end
     queue = Sidekiq::Queue.new(:latest_scan)
