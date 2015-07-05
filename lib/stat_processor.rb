@@ -26,22 +26,35 @@ module StatProcessor
     kills = 0
     lasthits = 0
     denies = 0
+    hd = 0
+    td = 0
+    hh = 0
 
     players.each do |player|
       xpm += player.xp_per_min
       gpm += player.gold_per_min
       kills += player.kills
+      hd += player.hero_damage
+      td += player.tower_damage
+      hh += player.hero_healing
       lasthits += player.last_hits
       denies += player.denies
+
     end
     record.inc(xpm: xpm,
                gpm: gpm,
                kills: kills,
                lasthits: lasthits,
                denies: denies,
+               hd: hd,
+               td: td,
+               hh: hh,
                matchcount: 1,
                totalduration: match.duration
     )
     record.save
   end
+
+
+
 end

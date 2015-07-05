@@ -7,11 +7,14 @@ class ProcessMatchJob < ActiveJob::Base
   def perform(*args)
     # Do something later
     rqueue = :mq_high
-    r = Redis.new
+    r = RedisSession
     if r.scard(rqueue) < 25
       rqueue = :mq
     end
-    20.times do
+    t = Time.now
+    count = 0
+    failcount = 0
+    while Time.now < (t+60+rand(5)) do
       if r.scard(rqueue) < 25
         sleep 10
         break
@@ -21,21 +24,22 @@ class ProcessMatchJob < ActiveJob::Base
         logger.info 'q is empty :('
         break
       end
-      s = Redis::Semaphore.new('match:'+qmatch.to_s, expiration: 600)
+      #next if rqueue == :mq_high and not skill and rand(2) != 0
+      s = Redis::Semaphore.new('match:'+qmatch.to_s, expiration: 60, redis: RedisSession)
       next if s.exists?
-      logger.info "/locking #{qmatch} (#{skill}) #{rqueue}"
       s.lock do
-        logger.info "processing #{qmatch}"
-        if Match.add_match(qmatch, skill)
+        if (ret = Match.add_match(qmatch, skill))
           logger.info "done #{qmatch}"
+          count+=1
         else
-          logger.info "will retry later #{qmatch}"
+          logger.info "will retry later #{qmatch} #{ret}"
+          failcount
         end
       end
-      logger.info "/unlocking #{qmatch}"
       s.unlock
       s.delete!
     end
+    logger.info "processed #{count} matches, failcount #{failcount}"
     queue = Sidekiq::Queue.new(:process_match)
     ([queue.limit.to_i, 50].max - queue.size.to_i).times do
       self.class.perform_later

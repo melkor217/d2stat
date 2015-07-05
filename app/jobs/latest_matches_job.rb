@@ -11,7 +11,7 @@ class LatestMatchesJob < ActiveJob::Base
       start_at_seq_num = entry.match_seq_num
     end
     if not start_at_seq_num
-      data = DotaLimited::get_rt('IDOTA2Match_570', 'GetMatchHistory', api_version: 'v1')
+      data = DotaLimited::get2('IDOTA2Match_570', 'GetMatchHistory', api_version: 'v1')
       if data and data['result'] and data['result']['matches'] and data['result']['matches'].last['match_seq_num'].to_i > 0
         start_at_seq_num = data['result']['matches'].last['match_seq_num']
         ScannerStatus.new(match_seq_num: start_at_seq_num, name: 'latest').save
@@ -23,17 +23,17 @@ class LatestMatchesJob < ActiveJob::Base
       end
     end
     begin
-      data = DotaLimited::get('IDOTA2Match_570', 'GetMatchHistoryBySequenceNum', start_at_match_seq_num: start_at_seq_num, api_version: 'v1')
+      data = DotaLimited::get2('IDOTA2Match_570', 'GetMatchHistoryBySequenceNum', start_at_match_seq_num: start_at_seq_num, api_version: 'v01')
     rescue Exception => e
-      logger.info "latest scan threshold (#{e.class}), sleep 10"
-      sleep 10
+      logger.info "latest scan threshold (#{e.class}), sleep 4"
+      sleep 4
       return
     end
 
     if data and data['result'] and data['result']['matches'].count
       count = 0
       data['result']['matches'].each do |match|
-        if Match.where(id: match['match_id']).count == 0
+        if not Match.where(id: match['match_id']).exists?
           count += 1
           if not @r.sismember(:mq_high, "#{match['match_id']} 1") and
               not @r.sismember(:mq_high, "#{match['match_id']} 2") and
@@ -47,19 +47,22 @@ class LatestMatchesJob < ActiveJob::Base
         ScannerStatus.where(name: 'latest').first().update(match_seq_num: last_num, start_time: DateTime.strptime(data['result']['matches'].last['start_time'].to_s, '%s'))
       end
     else
+      logger.info 'no matches by seq, sleep 10'
       sleep 10
     end
   end
 
   def perform(*args)
-    @r = Redis.new
+    @r = RedisSession
     # We perform full scan only if we are out of matches to process
     if @r.scard('mq_high') > 1000000
-      logger.info('sleep')
+      logger.info('sleep seq')
       sleep 10
     else
       10.times do
+        t = Time.now
         get_json
+        sleep [t+6.6 - Time.now, 0.1].max
       end
     end
     queue = Sidekiq::Queue.new(:latest_scan)

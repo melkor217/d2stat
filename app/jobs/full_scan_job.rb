@@ -24,7 +24,7 @@ class FullScanJob < ActiveJob::Base
     if data and data['result'] and data['result']['matches'].count
       count = 0
       data['result']['matches'].each do |match|
-        if Match.where(id: match['match_id']).count == 0
+        if not Match.where(id: match['match_id']).exists?
           count += 1
           if not @r.sismember(:mq_high, "#{match['match_id']} 1") and
               not @r.sismember(:mq_high, "#{match['match_id']} 2") and
@@ -41,7 +41,8 @@ class FullScanJob < ActiveJob::Base
   end
 
   def perform(*args)
-    @r = Redis.new
+    t = Time.now
+    @r = RedisSession
     # We perform full scan only if we are out of matches to process
     if @r.scard('mq') > 3000
       logger.info('sleep')
@@ -49,6 +50,7 @@ class FullScanJob < ActiveJob::Base
     else
       get_json
     end
+    sleep [t+5.1 - Time.now, 0.1].max
     queue = Sidekiq::Queue.new(:full_scan)
     ([queue.limit.to_i, 5].max - queue.size.to_i).times do
       self.class.perform_later

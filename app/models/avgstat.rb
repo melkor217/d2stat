@@ -6,6 +6,9 @@ class Avgstat
   field :kills, type: Integer
   field :lasthits, type: Integer
   field :denies, type: Integer
+  field :hd, type: Integer
+  field :td, type: Integer
+  field :hh, type: Integer
   field :matchcount, type: Integer
   field :totalduration, type: Integer
 

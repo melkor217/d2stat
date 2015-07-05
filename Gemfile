@@ -58,3 +58,5 @@ gem 'ratelimit'
 gem 'kaminari' # ez pages
 gem 'mongoid_rails_migrations'
 gem 'unicorn-rails'
+gem 'graphite-api'
+gem 'connection_pool'

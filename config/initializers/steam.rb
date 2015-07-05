@@ -14,7 +14,15 @@ Rails.application.config.middleware.use OmniAuth::Builder do
   provider :steam, STEAM_CONFIG['key']
 end
 
+Dotos = STEAM_CONFIG['scan_keys'].map do |key|
+  q = Dota.clone
+  q.configure do |config|
+    config.api_key = key
+  end
+  q
+end
+
+
 Dota.configure do |config|
   config.api_key = STEAM_CONFIG['key']
 end
-

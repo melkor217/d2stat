@@ -136,3 +136,15 @@ br
 '
 = (@match.actual_players.map { |player| player.xp_per_min }.sum)/@match.actual_players.count
 br
+| HD:
+'
+= (@match.actual_players.map { |player| player.hero_damage }.sum)/@match.actual_players.count
+br
+| HH:
+'
+= (@match.actual_players.map { |player| player.hero_healing }.sum)/@match.actual_players.count
+br
+| TD:
+'
+= (@match.actual_players.map { |player| player.tower_damage }.sum)/@match.actual_players.count
+br

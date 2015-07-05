@@ -32,7 +32,7 @@ class ProcessPlayersJob < ActiveJob::Base
   end
 
   def perform()
-    @r = Redis.new
+    @r = RedisSession
     # Do something later
     high_prio = Pqueue.where(:prio.gt => 9)
     if high_prio.count > 0
@@ -42,6 +42,7 @@ class ProcessPlayersJob < ActiveJob::Base
     end
     sleep 2
     30.times do
+      t = Time.now
       if pq.count < 1 or @r.scard('mq') > 3000
         sleep 10
         break
@@ -52,6 +53,7 @@ class ProcessPlayersJob < ActiveJob::Base
           account.delete
         end
       end
+      sleep [t+8.1 - Time.now, 0.1].max
     end
     queue = Sidekiq::Queue.new(:process_players)
     ([queue.limit.to_i, 10].max - queue.size.to_i).times do

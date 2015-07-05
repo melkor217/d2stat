@@ -33,6 +33,7 @@ class Match
   field :dire_guild_name, type: String
   field :radiant_guild_logo, type: String
   field :dire_guild_logo, type: String
+  field :engine, type: Integer
   field :rev, type: Integer # internal
   field :skill, type: Integer # internal
   field :scan_time, type: DateTime
@@ -73,66 +74,61 @@ class Match
 
   def self.add_match(match_id, skill=nil)
     existing_record = Match.where(id: match_id)
-    logger.debug count
-    if Match.where(id: match_id).count == 0
-      begin
-        details = DotaLimited::get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id, api_version: 'v1')
-      rescue Exception => e
-        logger.info "unable to get data (#{e.class})"
-        sleep 5
+    begin
+      details = DotaLimited::get('IDOTA2Match_570', 'GetMatchDetails', match_id: match_id, api_version: 'v1')
+    rescue Exception => e
+      logger.info "unable to get data (#{e.class})"
+      sleep 5
+      return 0
+    end
+    if details and details['result']
+      details['result']['rev'] = 1
+    else
+      logger.info "No details #{match_id}"
+      return 0
+    end
+
+    filtered_details = details['result'].select do |key|
+       # fields we don't wanna save as is
+       not %w{players pick_bans cluster start_time lobby_type game_mode}.include? key
+    end
+
+    if skill
+      if existing_record.exists?
+        record = existing_record.first
+      else
+        record = Match.new(filtered_details)
+      end
+      record.skill = skill
+    else
+      if existing_record.exists?
+        logger.fatal 'ERROR COUNT %i ' % match_id
         return 0
       end
-      if details and details['result']
-        details['result']['rev'] = 1
-      else
-        Rails.logger.error "No details #{match_id}"
-        return false
-      end
+      record = Match.new(filtered_details)
+    end
 
-      filtered_defails = details['result'].select do |key|
-         # fields we don't wanna save as is
-         not %w{players pick_bans cluster start_time lobby_type game_mode}.include? key
-      end
-
-      if skill
-        if existing_record.exists?
-          record = existing_record
-        else
-          record = Match.new(filtered_defails)
-        end
-        record.skill = skill
-      else
-        if existing_record.exists?
-          logger.fatal 'ERROR COUNT %i %i' % [count, match_id]
-          return
-        end
-        record = Match.new(filtered_defails)
-      end
-
-      record.start_time = DateTime.strptime(details['result']['start_time'].to_s, '%s')
-      record.region_id = details['result']['cluster']
-      record.lobby_id = details['result']['lobby_type'].to_i
-      record.mode_id = details['result']['game_mode'].to_i
-      record.scan_time = Time.now
-      details['result']['picks_bans'].each do |picks_ban|
-        pickrecord = PicksBan.new(picks_ban)
-        record.picks_bans.append pickrecord
-      end if details['result']['picks_bans']
-      if details['result']['players'].count > 0
-        players = Player.add_players(details['result']['players'], record)
-      else
-        logger.info "no players for match #{match_id}"
-        logger.info "json #{details['result']}"
-      end
-      logger.info('saved %s' % match_id)
-      if record.save and players
-        players.each do |player|
-          player.save
-        end
-        StatProcessor::perform(record, players)
-      end
+    record.start_time = DateTime.strptime(details['result']['start_time'].to_s, '%s')
+    record.region_id = details['result']['cluster']
+    record.lobby_id = details['result']['lobby_type'].to_i
+    record.mode_id = details['result']['game_mode'].to_i
+    record.scan_time = Time.now
+    details['result']['picks_bans'].each do |picks_ban|
+      pickrecord = PicksBan.new(picks_ban)
+      record.picks_bans.append pickrecord
+    end if details['result']['picks_bans']
+    if details['result']['players'].count > 0
+      players = Player.add_players(details['result']['players'], record)
     else
-      logger.info('skip  %s' % match_id)
+      logger.info "no players for match #{match_id}"
+      logger.info "json #{details['result']}"
+    end
+    logger.info('saved %s' % match_id)
+    if record.save and players
+      players.each do |player|
+        player.save
+      end
+      StatProcessor::perform(record, players)
     end
   end
 end

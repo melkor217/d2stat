@@ -45,5 +45,5 @@ Rails.application.configure do
   config.logger = tag_log
 
   # limit requests/min for public Steam API
-  config.dota_api_limit = 15000
+  config.dota_api_limit = 20000
 end

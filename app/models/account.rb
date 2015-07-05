@@ -39,7 +39,7 @@ class Account
     end
     if account = matched.first
       account['account_id'] =  account['steamid'].to_i - 76561197960265728
-      s = Redis::Semaphore.new('acc:'+account['account_id'].to_s, expiration: 600)
+      s = Redis::Semaphore.new('acc:'+account['account_id'].to_s, expiration: 600, redis: RedisSession)
       s.lock(10)
       criteria = Account.where(id: account_id)
       if criteria.exists?
