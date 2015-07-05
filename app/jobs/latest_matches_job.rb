@@ -66,7 +66,7 @@ class LatestMatchesJob < ActiveJob::Base
       end
     end
     queue = Sidekiq::Queue.new(:latest_scan)
-    ([queue.limit.to_i, 5].max - queue.size.to_i).times do
+    (5 - queue.size.to_i).times do
       self.class.perform_later
     end
     logger.info "finished latest scan #{self.queue_name}"

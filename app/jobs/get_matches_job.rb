@@ -41,7 +41,7 @@ class GetMatchesJob < ActiveJob::Base
         get_json(skill)
       end
       queue = Sidekiq::Queue.new(self.queue_name)
-      ([queue.limit.to_i, 5].max - queue.size.to_i).times do
+      (5 - queue.size.to_i).times do
         self.class.set(queue: self.queue_name).perform_later skill
       end
       logger.info "finished scan #{self.queue_name}"

@@ -41,7 +41,7 @@ class ProcessMatchJob < ActiveJob::Base
     end
     logger.info "processed #{count} matches, failcount #{failcount}"
     queue = Sidekiq::Queue.new(:process_match)
-    ([queue.limit.to_i, 50].max - queue.size.to_i).times do
+    (50 - queue.size.to_i).times do
       self.class.perform_later
     end
   end

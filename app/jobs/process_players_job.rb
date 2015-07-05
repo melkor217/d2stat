@@ -56,7 +56,7 @@ class ProcessPlayersJob < ActiveJob::Base
       sleep [t+8.1 - Time.now, 0.1].max
     end
     queue = Sidekiq::Queue.new(:process_players)
-    ([queue.limit.to_i, 10].max - queue.size.to_i).times do
+    (10 - queue.size.to_i).times do
       self.class.perform_later
     end
   end

@@ -47,7 +47,7 @@ class Account
         return true
       else
         record = Account.new(account)
-        Pqueue.find_or_create_by(id: account['account_id'])
+        Pqueue.find_or_create_by(account_id: account['account_id'])
       end
       if player
         player.account = record
